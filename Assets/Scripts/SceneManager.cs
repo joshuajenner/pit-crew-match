@@ -8,6 +8,9 @@ public class SceneManager : MonoBehaviour
     public Camera mainCamera;
     public GameObject cameraPointStart;
     public GameObject cameraPointGame;
+    public GameObject startPanel;
+    public GameObject pauseButton;
+    public GameObject pauseScreen;
 
     private float timeCount = 0.0f;
 
@@ -18,7 +21,14 @@ public class SceneManager : MonoBehaviour
 
     void Start()
     {
-        
+        InitScene();
+    }
+
+    private void InitScene()
+    {
+        startPanel.SetActive(true);
+        pauseButton.SetActive(false);
+        pauseScreen.SetActive(false);
     }
 
     void Update()
@@ -30,10 +40,28 @@ public class SceneManager : MonoBehaviour
             timeCount = timeCount + Time.deltaTime;
         }
     }
-
+    
+    public void SwitchToStart()
+    {
+        startPanel.SetActive(true);
+        pauseButton.SetActive(false);
+    }
 
     public void SwitchToGame()
     {
         isGameActive = true;
+        startPanel.SetActive(false);
+        pauseButton.SetActive(true);
     }
+
+    public void PauseGame()
+    {
+        
+    }
+
+    public void UnPauseGame()
+    {
+        
+    }
+
 }
