@@ -14,10 +14,12 @@ public class SceneManager : MonoBehaviour
 
     private float timeCount = 0.0f;
 
-    private Vector3 cameraTargetPosition;
-    private Vector3 cameraTargetRotation;
+    private Vector3 cameraCurrentPosition;
+    private Quaternion cameraCurrentRotation;
 
-    private bool isGameActive = false;
+    private Vector3 cameraTargetPosition;
+    private Quaternion cameraTargetRotation;
+
 
     void Start()
     {
@@ -26,18 +28,26 @@ public class SceneManager : MonoBehaviour
 
     private void InitScene()
     {
-        startPanel.SetActive(true);
-        pauseButton.SetActive(false);
+        SwitchToStart();
         pauseScreen.SetActive(false);
     }
 
     void Update()
     {
-        if (isGameActive)
+        float distanceToTarget = (mainCamera.transform.position - cameraTargetPosition).magnitude;
+
+        if (distanceToTarget > 0.1f)
         {
-            mainCamera.transform.rotation = Quaternion.Slerp(cameraPointStart.transform.rotation, cameraPointGame.transform.rotation, timeCount);
-            mainCamera.transform.position = Vector3.Slerp(cameraPointStart.transform.position, cameraPointGame.transform.position, timeCount);
-            timeCount = timeCount + Time.deltaTime;
+            mainCamera.transform.position = Vector3.Slerp(cameraCurrentPosition, cameraTargetPosition, timeCount);
+            mainCamera.transform.rotation = Quaternion.Slerp(cameraCurrentRotation, cameraTargetRotation, timeCount);
+            timeCount += Time.deltaTime * 1.5f;
+        }
+        else
+        {
+            cameraCurrentPosition = cameraTargetPosition;
+            cameraCurrentRotation = cameraTargetRotation;
+            mainCamera.transform.position = cameraCurrentPosition;
+            mainCamera.transform.rotation = cameraCurrentRotation;
         }
     }
     
@@ -45,23 +55,28 @@ public class SceneManager : MonoBehaviour
     {
         startPanel.SetActive(true);
         pauseButton.SetActive(false);
+        cameraTargetPosition = cameraPointStart.transform.position;
+        cameraTargetRotation = cameraPointStart.transform.rotation;
+        timeCount = 0;
     }
 
     public void SwitchToGame()
     {
-        isGameActive = true;
         startPanel.SetActive(false);
         pauseButton.SetActive(true);
+        cameraTargetPosition = cameraPointGame.transform.position;
+        cameraTargetRotation = cameraPointGame.transform.rotation;
+        timeCount = 0;
     }
 
     public void PauseGame()
     {
-        
+        pauseScreen.SetActive(true);
     }
 
     public void UnPauseGame()
     {
-        
+        pauseScreen.SetActive(false);
     }
 
 }
