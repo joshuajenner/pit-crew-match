@@ -24,7 +24,8 @@ public class Board : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Instantiate(tilePrefab, transform);
+                GameObject newContainer = Instantiate(tilePrefab, transform);
+                newContainer.GetComponent<TileContainer>().Initialize();
             }
         }
     }

@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class TileContainer : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject[] tiles;
 
-    // Update is called once per frame
-    void Update()
+    public void Initialize()
     {
-        
+        int tileIndex = Random.Range(0, tiles.Length);
+        GameObject newTile = Instantiate(tiles[tileIndex], this.transform);
     }
 }

@@ -11,8 +11,10 @@ public class SceneManager : MonoBehaviour
     public GameObject startPanel;
     public GameObject pauseButton;
     public GameObject pauseScreen;
+    public GameObject gameBoard;
 
     private float timeCount = 0.0f;
+    private bool isGameBoardNeeded = false;
 
     private Vector3 cameraCurrentPosition;
     private Quaternion cameraCurrentRotation;
@@ -48,6 +50,10 @@ public class SceneManager : MonoBehaviour
             cameraCurrentRotation = cameraTargetRotation;
             mainCamera.transform.position = cameraCurrentPosition;
             mainCamera.transform.rotation = cameraCurrentRotation;
+            if (isGameBoardNeeded)
+            {
+                gameBoard.SetActive(true);
+            }
         }
     }
     
@@ -55,8 +61,11 @@ public class SceneManager : MonoBehaviour
     {
         startPanel.SetActive(true);
         pauseButton.SetActive(false);
+        gameBoard.SetActive(false);
+        isGameBoardNeeded = false;
         cameraTargetPosition = cameraPointStart.transform.position;
         cameraTargetRotation = cameraPointStart.transform.rotation;
+
         timeCount = 0;
     }
 
@@ -64,6 +73,7 @@ public class SceneManager : MonoBehaviour
     {
         startPanel.SetActive(false);
         pauseButton.SetActive(true);
+        isGameBoardNeeded = true;
         cameraTargetPosition = cameraPointGame.transform.position;
         cameraTargetRotation = cameraPointGame.transform.rotation;
         timeCount = 0;
