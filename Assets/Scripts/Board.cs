@@ -7,13 +7,12 @@ public class Board : MonoBehaviour
     public int boardWidth;
     public int boardHeight;
     public float tileScale;
-    public int displayHeight;
+    public float displayHeight;
 
     public GameObject tilesParent;
     public GameObject backgroundParent;
 
     public GameObject backgroundPrefab;
-
 
     private GameObject[,] allTiles;
 
@@ -31,10 +30,10 @@ public class Board : MonoBehaviour
         {
             for (int y = 0; y < boardHeight; y++)
             {
-                Vector3 newPosition = new Vector3(y * tileScale, displayHeight, x * tileScale);
+                Vector3 gridPosition = new Vector3(y * tileScale, displayHeight, x * tileScale);
+                gridPosition += transform.position;
                 GameObject newBackground = Instantiate(backgroundPrefab, backgroundParent.transform);
-                newBackground.transform.position = newPosition;
-                //newContainer.GetComponent<TileContainer>().Initialize();
+                newBackground.transform.position = gridPosition;
             }
         }
     }

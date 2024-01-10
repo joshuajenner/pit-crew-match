@@ -7040,7 +7040,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988951909}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 38252696}
@@ -7063,7 +7063,7 @@ MonoBehaviour:
   boardWidth: 20
   boardHeight: 12
   tileScale: 1
-  displayHeight: 1
+  displayHeight: 0.15
   tilesParent: {fileID: 38252695}
   backgroundParent: {fileID: 1668758672}
   backgroundPrefab: {fileID: 8315331579789990916, guid: 6ff9a84998791c045bf6653c0b5746b1, type: 3}
