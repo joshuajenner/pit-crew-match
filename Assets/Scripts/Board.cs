@@ -4,28 +4,37 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    public int width;
-    public int height;
+    public int boardWidth;
+    public int boardHeight;
+    public float tileScale;
+    public int displayHeight;
 
-    public GameObject tilePrefab;
+    public GameObject tilesParent;
+    public GameObject backgroundParent;
+
+    public GameObject backgroundPrefab;
+
+
     private GameObject[,] allTiles;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        allTiles = new GameObject[width, height];
+        allTiles = new GameObject[boardWidth, boardHeight];
         InitBoard();
     }
 
     private void InitBoard()
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < boardWidth; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < boardHeight; y++)
             {
-                GameObject newContainer = Instantiate(tilePrefab, transform);
-                newContainer.GetComponent<TileContainer>().Initialize();
+                Vector3 newPosition = new Vector3(y * tileScale, displayHeight, x * tileScale);
+                GameObject newBackground = Instantiate(backgroundPrefab, backgroundParent.transform);
+                newBackground.transform.position = newPosition;
+                //newContainer.GetComponent<TileContainer>().Initialize();
             }
         }
     }
