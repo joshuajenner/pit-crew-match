@@ -13,8 +13,11 @@ public class Board : MonoBehaviour
     public GameObject backgroundParent;
 
     public GameObject backgroundPrefab;
+    public GameObject[] tilePrefabs;
 
-    private GameObject[,] allTiles;
+
+
+    public GameObject[,] allTiles;
 
 
     // Start is called before the first frame update
@@ -30,11 +33,32 @@ public class Board : MonoBehaviour
         {
             for (int y = 0; y < boardHeight; y++)
             {
-                Vector3 gridPosition = new Vector3(y * tileScale, displayHeight, x * tileScale);
-                gridPosition += transform.position;
-                GameObject newBackground = Instantiate(backgroundPrefab, backgroundParent.transform);
-                newBackground.transform.position = gridPosition;
+                int tileIndex = Random.Range(0, tilePrefabs.Length);
+                SpawnTileInBoard(tilePrefabs[tileIndex], tilesParent.transform, x, y, 0.2f);
+                SpawnObjectInBoard(backgroundPrefab, backgroundParent.transform, x, y, 0.15f);
             }
         }
     }
+
+
+    private void SpawnTileInBoard(GameObject prefab, Transform parent, int gridX, int gridY, float height)
+    {
+        GameObject newTile = SpawnObjectInBoard(prefab, parent, gridX, gridY, height);
+        allTiles[gridX, gridY] = newTile;
+        Tile tile = newTile.GetComponent<Tile>();
+        tile.board = this;
+    }
+
+    private GameObject SpawnObjectInBoard(GameObject prefab, Transform parent, int gridX, int gridY, float height)
+    {
+        Vector3 gridPosition = new Vector3(gridY * tileScale, height, gridX * tileScale);
+        gridPosition += transform.position;
+
+        GameObject newObject = Instantiate(prefab, parent);
+        newObject.name = "(" + gridX.ToString() + ", " + gridY.ToString() + ")";
+        newObject.transform.position = gridPosition;
+
+        return newObject;
+    }
+
 }

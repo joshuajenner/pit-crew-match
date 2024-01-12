@@ -380,7 +380,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1988951910}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &52863137
 PrefabInstance:
@@ -6007,7 +6007,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1988951910}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1696280362
 PrefabInstance:
@@ -7040,11 +7040,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988951909}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -15}
+  m_LocalPosition: {x: 1, y: 0, z: -24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 38252696}
   - {fileID: 1668758673}
+  - {fileID: 38252696}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7061,12 +7061,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardWidth: 20
-  boardHeight: 12
-  tileScale: 1
+  boardHeight: 10
+  tileScale: 2
   displayHeight: 0.15
   tilesParent: {fileID: 38252695}
   backgroundParent: {fileID: 1668758672}
   backgroundPrefab: {fileID: 8315331579789990916, guid: 6ff9a84998791c045bf6653c0b5746b1, type: 3}
+  tilePrefabs:
+  - {fileID: 5251746084875557221, guid: 2cf9f2fff8bd9cf41a99d7eb90808294, type: 3}
+  - {fileID: 5251746084875557221, guid: 2012352c904a7c647933eefa0d5cb69e, type: 3}
+  - {fileID: 5251746084875557221, guid: 8192997649cbcbe43b85b53cb7c60a87, type: 3}
+  - {fileID: 5251746084875557221, guid: 852412e59651ee24b95d988c76fa16e6, type: 3}
 --- !u!1 &2009753258
 GameObject:
   m_ObjectHideFlags: 0
@@ -7123,6 +7128,7 @@ MonoBehaviour:
   tilesParent: {fileID: 0}
   backgroundParent: {fileID: 0}
   backgroundPrefab: {fileID: 0}
+  tilePrefabs: []
 --- !u!114 &2009753261
 MonoBehaviour:
   m_ObjectHideFlags: 0
