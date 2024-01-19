@@ -11,7 +11,6 @@ public class Tile : MonoBehaviour
 
     public Vector2Int coordinatesCurrent;
     public Vector2Int coordinatesTarget;
-    private Vector2 tempPosition;
 
     private Vector2 firstTouchPosition;
     private Vector2 lastTouchPosition;
