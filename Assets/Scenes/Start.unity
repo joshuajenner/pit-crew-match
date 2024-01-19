@@ -7064,6 +7064,7 @@ MonoBehaviour:
   boardHeight: 10
   tileScale: 2
   displayHeight: 0.15
+  tileHeight: 0.2
   tilesParent: {fileID: 38252695}
   backgroundParent: {fileID: 1668758672}
   backgroundPrefab: {fileID: 8315331579789990916, guid: 6ff9a84998791c045bf6653c0b5746b1, type: 3}
@@ -7125,6 +7126,7 @@ MonoBehaviour:
   boardHeight: 0
   tileScale: 0
   displayHeight: 0
+  tileHeight: 0
   tilesParent: {fileID: 0}
   backgroundParent: {fileID: 0}
   backgroundPrefab: {fileID: 0}

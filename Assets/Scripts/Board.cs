@@ -8,6 +8,7 @@ public class Board : MonoBehaviour
     public int boardHeight;
     public float tileScale;
     public float displayHeight;
+    public float tileHeight;
 
     public GameObject tilesParent;
     public GameObject backgroundParent;
@@ -34,8 +35,8 @@ public class Board : MonoBehaviour
             for (int y = 0; y < boardHeight; y++)
             {
                 int tileIndex = Random.Range(0, tilePrefabs.Length);
-                SpawnTileInBoard(tilePrefabs[tileIndex], tilesParent.transform, x, y, 0.2f);
-                SpawnObjectInBoard(backgroundPrefab, backgroundParent.transform, x, y, 0.15f);
+                SpawnTileInBoard(tilePrefabs[tileIndex], tilesParent.transform, x, y, tileHeight);
+                SpawnObjectInBoard(backgroundPrefab, backgroundParent.transform, x, y, displayHeight);
             }
         }
     }
@@ -47,6 +48,8 @@ public class Board : MonoBehaviour
         allTiles[gridX, gridY] = newTile;
         Tile tile = newTile.GetComponent<Tile>();
         tile.board = this;
+        tile.coordinatesCurrent = new Vector2Int(gridX, gridY);
+        tile.coordinatesTarget = new Vector2Int(gridX, gridY);
     }
 
     private GameObject SpawnObjectInBoard(GameObject prefab, Transform parent, int gridX, int gridY, float height)
