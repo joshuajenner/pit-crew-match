@@ -39,7 +39,6 @@ public class Tile : MonoBehaviour
         }
     }
 
-
     private void OnMouseDown()
     {
         firstTouchPosition = Input.mousePosition;
