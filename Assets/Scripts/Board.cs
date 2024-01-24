@@ -50,6 +50,7 @@ public class Board : MonoBehaviour
         tile.board = this;
         tile.coordinatesCurrent = new Vector2Int(gridX, gridY);
         tile.coordinatesTarget = new Vector2Int(gridX, gridY);
+        tile.coordinatesPrevious = new Vector2Int(gridX, gridY);
     }
 
     private GameObject SpawnObjectInBoard(GameObject prefab, Transform parent, int gridX, int gridY, float height)

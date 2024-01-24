@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
 
     public Vector2Int coordinatesCurrent;
     public Vector2Int coordinatesTarget;
+    public Vector2Int coordinatesPrevious;
     
     private Vector2 firstTouchPosition;
     private Vector2 lastTouchPosition;
@@ -38,6 +39,7 @@ public class Tile : MonoBehaviour
             {
                 transform.localPosition = targetPosition;
                 coordinatesCurrent = coordinatesTarget;
+                coordinatesPrevious = coordinatesTarget;
                 board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = this.gameObject;
             }
         }
@@ -53,6 +55,23 @@ public class Tile : MonoBehaviour
         lastTouchPosition = Input.mousePosition;
         CalculateAngle();
     }
+
+
+    public IEnumerator CheckMoveCo()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        if (otherTile != null)
+        {
+            if (!isMatched && !otherTile.GetComponent<Tile>().isMatched)
+            {
+                otherTile.GetComponent<Tile>().coordinatesCurrent = coordinatesCurrent;
+                coordinatesCurrent = coordinatesPrevious;
+            }
+            otherTile = null;
+        }
+    }
+
 
     private void CalculateAngle()
     {
@@ -96,6 +115,7 @@ public class Tile : MonoBehaviour
             otherTile.GetComponent<Tile>().coordinatesTarget.y -= 1;
             coordinatesTarget.y += 1;
         }
+        CheckMoveCo();
     }
 
 
