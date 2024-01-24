@@ -65,8 +65,8 @@ public class Tile : MonoBehaviour
         {
             if (!isMatched && !otherTile.GetComponent<Tile>().isMatched)
             {
-                otherTile.GetComponent<Tile>().coordinatesCurrent = coordinatesCurrent;
-                coordinatesCurrent = coordinatesPrevious;
+                otherTile.GetComponent<Tile>().coordinatesTarget = coordinatesCurrent;
+                coordinatesTarget = otherTile.GetComponent<Tile>().coordinatesCurrent;
             }
             otherTile = null;
         }
@@ -115,7 +115,7 @@ public class Tile : MonoBehaviour
             otherTile.GetComponent<Tile>().coordinatesTarget.y -= 1;
             coordinatesTarget.y += 1;
         }
-        CheckMoveCo();
+        StartCoroutine(CheckMoveCo());
     }
 
 
