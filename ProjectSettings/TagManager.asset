@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Blue Tile
+  - Red Tile
+  - Green Tile
+  - Yellow Tile
   layers:
   - Default
   - TransparentFX

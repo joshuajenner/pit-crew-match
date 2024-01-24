@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6258399667076666109}
   m_Layer: 0
   m_Name: Tile3
-  m_TagString: Untagged
+  m_TagString: Green Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,7 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 548583b42c63ae647aad0214d1465d75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  board: {fileID: 0}
   tileIndex: 2
+  isMatched: 0
+  coordinatesCurrent: {x: 0, y: 0}
+  coordinatesTarget: {x: 0, y: 0}
   swipeAngle: 0
 --- !u!212 &4891313671846902543
 SpriteRenderer:

@@ -7,11 +7,13 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public Board board;
+
     public int tileIndex;
+    public bool isMatched = false;
 
     public Vector2Int coordinatesCurrent;
     public Vector2Int coordinatesTarget;
-
+    
     private Vector2 firstTouchPosition;
     private Vector2 lastTouchPosition;
     public float swipeAngle = 0;
@@ -22,6 +24,8 @@ public class Tile : MonoBehaviour
 
     private void Update()
     {
+        FindMatches();
+
         if (coordinatesCurrent != coordinatesTarget)
         {
             Vector3 targetPosition = new Vector3(coordinatesTarget.y * board.tileScale, board.tileHeight, coordinatesTarget.x * board.tileScale);
@@ -92,6 +96,46 @@ public class Tile : MonoBehaviour
             otherTile.GetComponent<Tile>().coordinatesTarget.y -= 1;
             coordinatesTarget.y += 1;
         }
+    }
+
+
+    private void FindMatches()
+    {
+        if (coordinatesCurrent.x > 0 && coordinatesCurrent.x < board.boardWidth - 1)
+        {
+            GameObject leftTile1 = board.allTiles[coordinatesCurrent.x - 1, coordinatesCurrent.y];
+            GameObject rightTile1 = board.allTiles[coordinatesCurrent.x + 1, coordinatesCurrent.y];
+
+            if (leftTile1.tag == gameObject.tag && gameObject.tag == rightTile1.tag)
+            {
+                leftTile1.GetComponent<Tile>().SetMatched();
+                SetMatched();
+                rightTile1.GetComponent<Tile>().SetMatched();
+            }
+        }
+
+        if (coordinatesCurrent.y > 0 && coordinatesCurrent.y < board.boardHeight - 1)
+        {
+            GameObject upTile1 = board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y - 1];
+            GameObject downTile1 = board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y + 1];
+
+            if (upTile1.tag == gameObject.tag && gameObject.tag == downTile1.tag)
+            {
+                upTile1.GetComponent<Tile>().SetMatched();
+                SetMatched();
+                downTile1.GetComponent<Tile>().SetMatched();
+            }
+        }
+
+    }
+
+
+    public void SetMatched()
+    {
+        isMatched = true;
+
+        SpriteRenderer mySprite = GetComponent<SpriteRenderer>();
+        mySprite.color = new Color(1f, 1f, 1f, 0.2f);
     }
 }
 
