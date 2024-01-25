@@ -63,7 +63,7 @@ public class Board : MonoBehaviour
 
     private GameObject SpawnObjectInBoard(GameObject prefab, Transform parent, int gridX, int gridY, float height)
     {
-        Vector3 gridPosition = new Vector3(gridY * tileScale, height, gridX * tileScale);
+        Vector3 gridPosition = new Vector3(gridX * tileScale, height, gridY * tileScale);
         gridPosition += transform.position;
 
         GameObject newObject = Instantiate(prefab, parent);
