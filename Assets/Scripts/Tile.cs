@@ -18,6 +18,7 @@ public class Tile : MonoBehaviour
     private Vector2 firstTouchPosition;
     private Vector2 lastTouchPosition;
     public float swipeAngle = 0;
+    public float swipeMinimum = 1f;
 
     private GameObject otherTile;
 
@@ -33,7 +34,7 @@ public class Tile : MonoBehaviour
 
             if (Mathf.Abs((targetPosition - transform.localPosition).magnitude) > 0.1f)
             {
-                transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, 0.2f);
+                transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, 7f * Time.deltaTime);
             }
             else
             {
@@ -68,6 +69,10 @@ public class Tile : MonoBehaviour
                 otherTile.GetComponent<Tile>().coordinatesTarget = coordinatesCurrent;
                 coordinatesTarget = otherTile.GetComponent<Tile>().coordinatesCurrent;
             }
+            else
+            {
+                board.DestroyMatches();
+            }
             otherTile = null;
         }
     }
@@ -75,10 +80,12 @@ public class Tile : MonoBehaviour
 
     private void CalculateAngle()
     {
-        swipeAngle = Mathf.Atan2(lastTouchPosition.y - firstTouchPosition.y, lastTouchPosition.x - firstTouchPosition.x) * Mathf.Rad2Deg;
-        Debug.Log(swipeAngle);
-        MoveTile();
-
+        if (Mathf.Abs((firstTouchPosition - lastTouchPosition).magnitude) > swipeMinimum)
+        {
+            swipeAngle = Mathf.Atan2(lastTouchPosition.y - firstTouchPosition.y, lastTouchPosition.x - firstTouchPosition.x) * Mathf.Rad2Deg;
+            MoveTile();
+            //Debug.Log(swipeAngle);
+        }
     }
 
     private void MoveTile()
@@ -126,11 +133,14 @@ public class Tile : MonoBehaviour
             GameObject leftTile1 = board.allTiles[coordinatesCurrent.x - 1, coordinatesCurrent.y];
             GameObject rightTile1 = board.allTiles[coordinatesCurrent.x + 1, coordinatesCurrent.y];
 
-            if (leftTile1.tag == gameObject.tag && gameObject.tag == rightTile1.tag)
+            if (leftTile1 != null && rightTile1 != null)
             {
-                leftTile1.GetComponent<Tile>().SetMatched();
-                SetMatched();
-                rightTile1.GetComponent<Tile>().SetMatched();
+                if (leftTile1.tag == gameObject.tag && gameObject.tag == rightTile1.tag)
+                {
+                    leftTile1.GetComponent<Tile>().SetMatched();
+                    SetMatched();
+                    rightTile1.GetComponent<Tile>().SetMatched();
+                }
             }
         }
 
@@ -139,14 +149,17 @@ public class Tile : MonoBehaviour
             GameObject upTile1 = board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y - 1];
             GameObject downTile1 = board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y + 1];
 
-            if (upTile1.tag == gameObject.tag && gameObject.tag == downTile1.tag)
+            if (upTile1 != null && downTile1 != null)
             {
-                upTile1.GetComponent<Tile>().SetMatched();
-                SetMatched();
-                downTile1.GetComponent<Tile>().SetMatched();
+                if (upTile1.tag == gameObject.tag && gameObject.tag == downTile1.tag)
+                {
+                    upTile1.GetComponent<Tile>().SetMatched();
+                    SetMatched();
+                    downTile1.GetComponent<Tile>().SetMatched();
+                }
+
             }
         }
-
     }
 
 
