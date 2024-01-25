@@ -30,7 +30,7 @@ public class Tile : MonoBehaviour
 
         if (coordinatesCurrent != coordinatesTarget)
         {
-            Vector3 targetPosition = new Vector3(coordinatesTarget.y * board.tileScale, board.tileHeight, coordinatesTarget.x * board.tileScale);
+            Vector3 targetPosition = new Vector3(coordinatesTarget.x * board.tileScale, board.tileHeight, coordinatesTarget.y * board.tileScale);
 
             if (Mathf.Abs((targetPosition - transform.localPosition).magnitude) > 0.1f)
             {
