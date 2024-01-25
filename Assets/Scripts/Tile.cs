@@ -165,6 +165,8 @@ public class Tile : MonoBehaviour
 
     public void SetMatched()
     {
+        Debug.Log($"Set Matched ({coordinatesCurrent.x}, {coordinatesCurrent.y})");
+
         isMatched = true;
 
         SpriteRenderer mySprite = GetComponent<SpriteRenderer>();
