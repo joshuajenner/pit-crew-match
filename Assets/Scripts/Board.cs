@@ -17,7 +17,6 @@ public class Board : MonoBehaviour
     public GameObject[] tilePrefabs;
 
 
-
     public GameObject[,] allTiles;
 
 
@@ -41,14 +40,12 @@ public class Board : MonoBehaviour
                     tileIndex = Random.Range(0, tilePrefabs.Length);
                     iterations++;
                 }
-                iterations = 0;
 
                 SpawnTileInBoard(tilePrefabs[tileIndex], tilesParent.transform, x, y, tileHeight);
                 SpawnObjectInBoard(backgroundPrefab, backgroundParent.transform, x, y, displayHeight);
             }
         }
     }
-
 
     private void SpawnTileInBoard(GameObject prefab, Transform parent, int gridX, int gridY, float height)
     {
@@ -72,6 +69,51 @@ public class Board : MonoBehaviour
 
         return newObject;
     }
+
+
+
+    public void SwipeTile(Vector2Int coords, float angle)
+    {
+        Vector2Int endCoords;
+
+        if (angle > -45 && angle <= 45 && coords.x < boardWidth - 1)
+        {
+            // right swipe
+            Debug.Log("Right");
+            endCoords = new Vector2Int(coords.x + 1, coords.y);
+        }
+        else if (angle < -45 && angle >= -135 && coords.y < boardHeight - 1)
+        {
+            // up swipe
+            Debug.Log("Up");
+            endCoords = new Vector2Int(coords.x, coords.y - 1);
+        }
+        else if ((angle > 135 || angle <= -135) && coords.x > 0)
+        {
+            // left swipe
+            Debug.Log("Left");
+            endCoords = new Vector2Int(coords.x - 1, coords.y);
+        }
+        else if (angle > 45 && angle <= 135 && coords.y > 0)
+        {
+            // down swipe
+            Debug.Log("Down");
+            endCoords = new Vector2Int(coords.x, coords.y + 1);
+        }
+        else
+        {
+            return;
+        }
+
+        Tile startTile = allTiles[coords.x, coords.y].GetComponent<Tile>();
+        Tile endTile = allTiles[endCoords.x, endCoords.y].GetComponent<Tile>();
+
+        startTile.coordinatesTarget = endTile.coordinatesCurrent;
+        endTile.coordinatesTarget = startTile.coordinatesCurrent;
+    }
+
+
+
 
 
     private bool HasMatchesAt(Vector2Int coords, GameObject checkTile) 
@@ -140,7 +182,7 @@ public class Board : MonoBehaviour
 
         for (int x = 0; x < boardWidth; x++)
         {
-            for (int y = boardHeight - 1; y >= 0; y--)
+            for (int y = 0; y < boardHeight; y++)
             {
                 if (allTiles[x, y] == null)
                 {
@@ -148,7 +190,8 @@ public class Board : MonoBehaviour
                 } 
                 else if (nullCount > 0)
                 {
-                    allTiles[x, y].GetComponent<Tile>().coordinatesTarget.y += nullCount;
+                    allTiles[x, y].GetComponent<Tile>().coordinatesTarget.y -= nullCount;
+                    allTiles[x, y] = null;
                 }
             }
             nullCount = 0;

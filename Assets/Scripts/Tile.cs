@@ -35,13 +35,16 @@ public class Tile : MonoBehaviour
             if (Mathf.Abs((targetPosition - transform.localPosition).magnitude) > 0.1f)
             {
                 transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, 7f * Time.deltaTime);
+                if (board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] != this.gameObject) {
+                    board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = this.gameObject;
+                }
             }
             else
             {
                 transform.localPosition = targetPosition;
                 coordinatesCurrent = coordinatesTarget;
                 coordinatesPrevious = coordinatesTarget;
-                board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = this.gameObject;
+                //board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = this.gameObject;
             }
         }
     }
@@ -54,9 +57,17 @@ public class Tile : MonoBehaviour
     private void OnMouseUp()
     {
         lastTouchPosition = Input.mousePosition;
-        CalculateAngle();
+        SendSwipe();
     }
 
+    private void SendSwipe()
+    {
+        if (Mathf.Abs((firstTouchPosition - lastTouchPosition).magnitude) > swipeMinimum)
+        {
+            swipeAngle = Mathf.Atan2(lastTouchPosition.y - firstTouchPosition.y, lastTouchPosition.x - firstTouchPosition.x) * Mathf.Rad2Deg;
+            board.SwipeTile(coordinatesCurrent, swipeAngle);
+        }
+    }
 
     public IEnumerator CheckMoveCo()
     {
@@ -78,52 +89,44 @@ public class Tile : MonoBehaviour
     }
 
 
-    private void CalculateAngle()
-    {
-        if (Mathf.Abs((firstTouchPosition - lastTouchPosition).magnitude) > swipeMinimum)
-        {
-            swipeAngle = Mathf.Atan2(lastTouchPosition.y - firstTouchPosition.y, lastTouchPosition.x - firstTouchPosition.x) * Mathf.Rad2Deg;
-            MoveTile();
-            //Debug.Log(swipeAngle);
-        }
-    }
 
-    private void MoveTile()
-    {
-        if (swipeAngle > -45 && swipeAngle <= 45 && coordinatesCurrent.x < board.boardWidth - 1)
-        {
-            // right swipe
-            Debug.Log("Right");
-            otherTile = board.allTiles[coordinatesTarget.x + 1, coordinatesTarget.y];
-            otherTile.GetComponent<Tile>().coordinatesTarget.x -= 1;
-            coordinatesTarget.x += 1;
-        } 
-        else if (swipeAngle > 45 && swipeAngle <= 135 && coordinatesCurrent.y > 0)
-        {
-            // up swipe
-            Debug.Log("Up");
-            otherTile = board.allTiles[coordinatesTarget.x, coordinatesTarget.y - 1];
-            otherTile.GetComponent<Tile>().coordinatesTarget.y += 1;
-            coordinatesTarget.y -= 1;
-        }
-        else if ((swipeAngle > 135 || swipeAngle <= -135) && coordinatesCurrent.x > 0)
-        {
-            // left swipe
-            Debug.Log("Left");
-            otherTile = board.allTiles[coordinatesTarget.x - 1, coordinatesTarget.y];
-            otherTile.GetComponent<Tile>().coordinatesTarget.x += 1;
-            coordinatesTarget.x -= 1;
-        }
-        else if (swipeAngle < -45 && swipeAngle >= -135 && coordinatesCurrent.y < board.boardHeight - 1)
-        {
-            // down swipe
-            Debug.Log("Down");
-            otherTile = board.allTiles[coordinatesTarget.x, coordinatesTarget.y + 1];
-            otherTile.GetComponent<Tile>().coordinatesTarget.y -= 1;
-            coordinatesTarget.y += 1;
-        }
-        StartCoroutine(CheckMoveCo());
-    }
+
+    //private void MoveTile()
+    //{
+    //    if (swipeAngle > -45 && swipeAngle <= 45 && coordinatesCurrent.x < board.boardWidth - 1)
+    //    {
+    //        // right swipe
+    //        Debug.Log("Right");
+    //        otherTile = board.allTiles[coordinatesTarget.x + 1, coordinatesTarget.y];
+    //        otherTile.GetComponent<Tile>().coordinatesTarget.x -= 1;
+    //        coordinatesTarget.x += 1;
+    //    } 
+    //    else if (swipeAngle < -45 && swipeAngle >= -135 && coordinatesCurrent.y < board.boardHeight - 1)
+    //    {
+    //        // up swipe
+    //        Debug.Log("Up");
+    //        otherTile = board.allTiles[coordinatesTarget.x, coordinatesTarget.y - 1];
+    //        otherTile.GetComponent<Tile>().coordinatesTarget.y += 1;
+    //        coordinatesTarget.y -= 1;
+    //    }
+    //    else if ((swipeAngle > 135 || swipeAngle <= -135) && coordinatesCurrent.x > 0)
+    //    {
+    //        // left swipe
+    //        Debug.Log("Left");
+    //        otherTile = board.allTiles[coordinatesTarget.x - 1, coordinatesTarget.y];
+    //        otherTile.GetComponent<Tile>().coordinatesTarget.x += 1;
+    //        coordinatesTarget.x -= 1;
+    //    }
+    //    else if (swipeAngle > 45 && swipeAngle <= 135 && coordinatesCurrent.y > 0)
+    //    {
+    //        // down swipe
+    //        Debug.Log("Down");
+    //        otherTile = board.allTiles[coordinatesTarget.x, coordinatesTarget.y + 1];
+    //        otherTile.GetComponent<Tile>().coordinatesTarget.y -= 1;
+    //        coordinatesTarget.y += 1;
+    //    }
+    //    StartCoroutine(CheckMoveCo());
+    //}
 
 
     private void FindMatches()
