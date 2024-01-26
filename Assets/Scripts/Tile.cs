@@ -20,13 +20,15 @@ public class Tile : MonoBehaviour
     public float swipeAngle = 0;
     public float swipeMinimum = 1f;
 
+    public bool justSwiped = false;
+
     private GameObject otherTile;
 
 
 
     private void Update()
     {
-        FindMatches();
+        //FindMatches();
 
         if (coordinatesCurrent != coordinatesTarget)
         {
@@ -34,17 +36,22 @@ public class Tile : MonoBehaviour
 
             if (Mathf.Abs((targetPosition - transform.localPosition).magnitude) > 0.1f)
             {
-                transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, 7f * Time.deltaTime);
-                if (board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] != this.gameObject) {
-                    board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = this.gameObject;
-                }
+                // Tile Moving Towards Target
+                board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = null;
+                transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, 2f * Time.deltaTime);
+                //if (board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] != this.gameObject) {
+                //    board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = this.gameObject;
+                //}
             }
             else
             {
+                // Tile Arrived At Target
                 transform.localPosition = targetPosition;
                 coordinatesCurrent = coordinatesTarget;
                 coordinatesPrevious = coordinatesTarget;
-                //board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = this.gameObject;
+
+                board.SetTileAtCoord(coordinatesCurrent, this.gameObject);
+                board.DestroyMatchesAt(coordinatesCurrent);
             }
         }
     }
@@ -69,24 +76,24 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public IEnumerator CheckMoveCo()
-    {
-        yield return new WaitForSeconds(0.5f);
+    //public IEnumerator CheckMoveCo()
+    //{
+    //    yield return new WaitForSeconds(0.5f);
 
-        if (otherTile != null)
-        {
-            if (!isMatched && !otherTile.GetComponent<Tile>().isMatched)
-            {
-                otherTile.GetComponent<Tile>().coordinatesTarget = coordinatesCurrent;
-                coordinatesTarget = otherTile.GetComponent<Tile>().coordinatesCurrent;
-            }
-            else
-            {
-                board.DestroyMatches();
-            }
-            otherTile = null;
-        }
-    }
+    //    if (otherTile != null)
+    //    {
+    //        if (!isMatched && !otherTile.GetComponent<Tile>().isMatched)
+    //        {
+    //            otherTile.GetComponent<Tile>().coordinatesTarget = coordinatesCurrent;
+    //            coordinatesTarget = otherTile.GetComponent<Tile>().coordinatesCurrent;
+    //        }
+    //        else
+    //        {
+    //            board.DestroyMatches();
+    //        }
+    //        otherTile = null;
+    //    }
+    //}
 
 
 

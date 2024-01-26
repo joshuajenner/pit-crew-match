@@ -76,28 +76,20 @@ public class Board : MonoBehaviour
     {
         Vector2Int endCoords;
 
-        if (angle > -45 && angle <= 45 && coords.x < boardWidth - 1)
+        if (angle > -45 && angle <= 45 && coords.x < boardWidth - 1) // Right
         {
-            // right swipe
-            Debug.Log("Right");
             endCoords = new Vector2Int(coords.x + 1, coords.y);
         }
-        else if (angle < -45 && angle >= -135 && coords.y < boardHeight - 1)
+        else if (angle < -45 && angle >= -135 && coords.y > 0) // Down
         {
-            // up swipe
-            Debug.Log("Up");
             endCoords = new Vector2Int(coords.x, coords.y - 1);
         }
-        else if ((angle > 135 || angle <= -135) && coords.x > 0)
+        else if ((angle > 135 || angle <= -135) && coords.x > 0) // Left
         {
-            // left swipe
-            Debug.Log("Left");
             endCoords = new Vector2Int(coords.x - 1, coords.y);
         }
-        else if (angle > 45 && angle <= 135 && coords.y > 0)
+        else if (angle > 45 && angle <= 135 && coords.y < boardHeight) // Up
         {
-            // down swipe
-            Debug.Log("Down");
             endCoords = new Vector2Int(coords.x, coords.y + 1);
         }
         else
@@ -108,11 +100,135 @@ public class Board : MonoBehaviour
         Tile startTile = allTiles[coords.x, coords.y].GetComponent<Tile>();
         Tile endTile = allTiles[endCoords.x, endCoords.y].GetComponent<Tile>();
 
-        startTile.coordinatesTarget = endTile.coordinatesCurrent;
-        endTile.coordinatesTarget = startTile.coordinatesCurrent;
+        startTile.coordinatesTarget = endCoords;
+        endTile.coordinatesTarget = coords;
+        //startTile.justSwiped = true;
+        //endTile.justSwiped = true;
+
+        //SetTileAtCoord(endCoords, startTile.gameObject);
+        //SetTileAtCoord(coords, endTile.gameObject);
+    }
+
+    public void SetTileAtCoord(Vector2Int coords, GameObject tile)
+    {
+        allTiles[coords.x, coords.y] = tile;
     }
 
 
+    public void DestroyMatchesAt(Vector2Int coords)
+    {
+        List<Vector2Int> matchedTiles = new List<Vector2Int>();
+
+        Vector2Int up1 = new Vector2Int(coords.x, coords.y + 1);
+        Vector2Int up2 = new Vector2Int(coords.x, coords.y + 2);
+        Vector2Int down1 = new Vector2Int(coords.x, coords.y - 1);
+        Vector2Int down2 = new Vector2Int(coords.x, coords.y - 2);
+        Vector2Int left1 = new Vector2Int(coords.x - 1, coords.y);
+        Vector2Int left2 = new Vector2Int(coords.x - 2, coords.y);
+        Vector2Int right1 = new Vector2Int(coords.x + 1, coords.y);
+        Vector2Int right2 = new Vector2Int(coords.x + 2, coords.y);
+
+        if (coords.x > 0 && coords.x < (boardWidth - 1) && HasSameTags(left1, coords, right1)) 
+        {
+            matchedTiles.Add(left1);// OXO
+            matchedTiles.Add(coords);
+            matchedTiles.Add(right1); 
+        }
+        if (coords.x > 1 && HasSameTags(left2, left1, coords))
+        {
+            matchedTiles.Add(left2);// OOX
+            matchedTiles.Add(left1);
+            matchedTiles.Add(coords);
+        }
+        if (coords.x < (boardWidth - 2) && HasSameTags(coords, right1, right2))
+        {
+            matchedTiles.Add(coords);// XOO
+            matchedTiles.Add(right1);
+            matchedTiles.Add(right2);
+        }
+
+        if (coords.y > 0 && coords.y < (boardHeight - 1) && HasSameTags(up1, coords, down1))
+        {
+            matchedTiles.Add(up1);//    O
+            matchedTiles.Add(coords);// X
+            matchedTiles.Add(down1);//  O
+        }
+        if (coords.y > 1 && HasSameTags(coords, down1, down2))
+        {
+            matchedTiles.Add(coords);// X
+            matchedTiles.Add(down1);//  O
+            matchedTiles.Add(down2);//  O
+        }
+        if (coords.y < (boardHeight - 2) && HasSameTags(up2, up1, coords))
+        {
+            matchedTiles.Add(up2);//    O
+            matchedTiles.Add(up1);//    O
+            matchedTiles.Add(coords);// X
+        }
+
+        if (matchedTiles.Count > 0)
+        {
+            DestoryMatchedTiles(matchedTiles);
+        }
+    }
+
+    private bool HasSameTags(Vector2Int coord1, Vector2Int coord2, Vector2Int coord3)
+    {
+        GameObject tile1 = allTiles[coord1.x, coord1.y];
+        GameObject tile2 = allTiles[coord2.x, coord2.y];
+        GameObject tile3 = allTiles[coord3.x, coord3.y];
+
+        if (tile1 != null && tile2 != null && tile3 != null)
+        {
+            if (tile1.tag == tile2.tag)
+            {
+                if (tile2.tag == tile3.tag)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private void DestoryMatchedTiles(List<Vector2Int> coordsList)
+    {
+        Debug.Log("Found " + coordsList.Count + " Tiles");
+        int dbg = 0;
+
+        foreach (Vector2Int coords in coordsList)
+        {
+            GameObject tileObject = allTiles[coords.x, coords.y];
+
+            if (tileObject != null)
+            {
+                allTiles[coords.x, coords.y] = null;
+                Destroy(tileObject);
+                CollapseColumn(coords);
+                dbg++;
+            }
+        }
+
+        Debug.Log("Destroyed " + dbg + " Tiles");
+    }
+
+    private void CollapseColumn(Vector2Int coords)
+    {
+        int dbg = 0;
+
+        for (int row = coords.y + 1; row < boardHeight; row++)
+        {
+            GameObject tileObject = allTiles[coords.x, row];
+
+            if (tileObject != null)
+            {
+                tileObject.GetComponent<Tile>().coordinatesTarget.y -= 1;
+                dbg++;
+            }
+        }
+        Debug.Log("Collapsed: " + dbg + " tiles on Column " + coords.x);
+    }
 
 
 
@@ -149,7 +265,7 @@ public class Board : MonoBehaviour
         return false;
     }
 
-    private void DestroyMatchesAt(Vector2Int coords)
+    private void DestroyMatchAt(Vector2Int coords)
     {
         Tile checkTile = allTiles[coords.x, coords.y].GetComponent<Tile>();
 
@@ -169,7 +285,7 @@ public class Board : MonoBehaviour
             {
                 if (allTiles[w, h] != null)
                 {
-                    DestroyMatchesAt(new Vector2Int(w, h));
+                    DestroyMatchAt(new Vector2Int(w, h));
                 }
             }
         }
