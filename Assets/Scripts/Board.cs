@@ -16,7 +16,6 @@ public class Board : MonoBehaviour
     public GameObject backgroundPrefab;
     public GameObject[] tilePrefabs;
 
-
     public GameObject[,] allTiles;
 
 
@@ -102,8 +101,8 @@ public class Board : MonoBehaviour
 
         startTile.coordinatesTarget = endCoords;
         endTile.coordinatesTarget = coords;
-        //startTile.justSwiped = true;
-        //endTile.justSwiped = true;
+        startTile.justSwiped = true;
+        endTile.justSwiped = true;
 
         //SetTileAtCoord(endCoords, startTile.gameObject);
         //SetTileAtCoord(coords, endTile.gameObject);
@@ -217,16 +216,31 @@ public class Board : MonoBehaviour
     {
         int dbg = 0;
 
-        for (int row = coords.y + 1; row < boardHeight; row++)
+        for (int i = 0; i < tilesParent.transform.childCount; i++)
         {
-            GameObject tileObject = allTiles[coords.x, row];
-
-            if (tileObject != null)
+            Transform tileObject = tilesParent.transform.GetChild(i);
+            Tile tile = tileObject.GetComponent<Tile>();
+            if (!tile.justSwiped)
             {
-                tileObject.GetComponent<Tile>().coordinatesTarget.y -= 1;
-                dbg++;
+                if (tile.coordinatesCurrent.x == coords.x && tile.coordinatesCurrent.y > coords.y)
+                {
+                    tile.coordinatesTarget.y -= 1;
+                    dbg++;
+                }
             }
+            
         }
+
+        //for (int row = coords.y + 1; row < boardHeight; row++)
+        //{
+        //    GameObject tileObject = allTiles[coords.x, row];
+
+        //    if (tileObject != null)
+        //    {
+        //        tileObject.GetComponent<Tile>().coordinatesTarget.y -= 1;
+        //        dbg++;
+        //    }
+        //}
         Debug.Log("Collapsed: " + dbg + " tiles on Column " + coords.x);
     }
 

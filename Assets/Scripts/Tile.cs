@@ -22,7 +22,7 @@ public class Tile : MonoBehaviour
 
     public bool justSwiped = false;
 
-    private GameObject otherTile;
+    //private GameObject otherTile;
 
 
 
@@ -50,6 +50,7 @@ public class Tile : MonoBehaviour
                 coordinatesCurrent = coordinatesTarget;
                 coordinatesPrevious = coordinatesTarget;
 
+                justSwiped = false;
                 board.SetTileAtCoord(coordinatesCurrent, this.gameObject);
                 board.DestroyMatchesAt(coordinatesCurrent);
             }
