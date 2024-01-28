@@ -7060,13 +7060,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac5797bac7f0a3c4aadbf5e7171571c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardWidth: 16
-  boardHeight: 7
+  width: 16
+  height: 7
   tileScale: 3
   displayHeight: 0.15
   tileHeight: 0.25
-  tilesParent: {fileID: 38252695}
-  backgroundParent: {fileID: 1668758672}
+  tilesParent: {fileID: 38252696}
+  backgroundParent: {fileID: 1668758673}
   backgroundPrefab: {fileID: 8315331579789990916, guid: 6ff9a84998791c045bf6653c0b5746b1, type: 3}
   tilePrefabs:
   - {fileID: 5251746084875557221, guid: 2cf9f2fff8bd9cf41a99d7eb90808294, type: 3}
@@ -7122,8 +7122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac5797bac7f0a3c4aadbf5e7171571c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardWidth: 0
-  boardHeight: 0
+  width: 0
+  height: 0
   tileScale: 0
   displayHeight: 0
   tileHeight: 0

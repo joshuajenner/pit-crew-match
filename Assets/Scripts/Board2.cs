@@ -51,7 +51,7 @@ public class Board2 : MonoBehaviour
     {
         GameObject newTile = SpawnObjectInBoard(prefab, parent, gridX, gridY, height);
         allTiles[gridX, gridY] = newTile;
-        Tile tile = newTile.GetComponent<Tile>();
+        Tile2 tile = newTile.GetComponent<Tile2>();
         tile.board = this;
         tile.coordinatesCurrent = new Vector2Int(gridX, gridY);
         tile.coordinatesTarget = new Vector2Int(gridX, gridY);
@@ -96,8 +96,8 @@ public class Board2 : MonoBehaviour
             return;
         }
 
-        Tile startTile = allTiles[coords.x, coords.y].GetComponent<Tile>();
-        Tile endTile = allTiles[endCoords.x, endCoords.y].GetComponent<Tile>();
+        Tile2 startTile = allTiles[coords.x, coords.y].GetComponent<Tile2 >();
+        Tile2 endTile = allTiles[endCoords.x, endCoords.y].GetComponent<Tile2 >();
 
         startTile.coordinatesTarget = endCoords;
         endTile.coordinatesTarget = coords;
@@ -175,9 +175,9 @@ public class Board2 : MonoBehaviour
 
     private bool HasSameTags(Vector2Int coord1, Vector2Int coord2, Vector2Int coord3)
     {
-        Tile tile1 = allTiles[coord1.x, coord1.y].GetComponent<Tile>();
-        Tile tile2 = allTiles[coord2.x, coord2.y].GetComponent<Tile>();
-        Tile tile3 = allTiles[coord3.x, coord3.y].GetComponent<Tile>();
+        Tile2 tile1 = allTiles[coord1.x, coord1.y].GetComponent<Tile2 >();
+        Tile2 tile2 = allTiles[coord2.x, coord2.y].GetComponent<Tile2 >();
+        Tile2 tile3 = allTiles[coord3.x, coord3.y].GetComponent<Tile2 >();
 
         if (!tile1.isMoving && !tile2.isMoving && !tile3.isMoving)
         {
@@ -220,7 +220,7 @@ public class Board2 : MonoBehaviour
     {
         int tileIndex = Random.Range(0, tilePrefabs.Length);
         GameObject tileObject = Instantiate(tilePrefabs[tileIndex], tilesParent.transform);
-        Tile newTile = tileObject.GetComponent<Tile>();
+        Tile2 newTile = tileObject.GetComponent<Tile2 >();
         newTile.board = this;
 
         Vector3 gridPosition = new Vector3(column * tileScale, tileHeight, boardHeight * tileScale);
@@ -238,7 +238,7 @@ public class Board2 : MonoBehaviour
         //for (int i = 0; i < tilesParent.transform.childCount; i++)
         //{
         //    Transform tileObject = tilesParent.transform.GetChild(i);
-        //    Tile tile = tileObject.GetComponent<Tile>();
+        //    Tile2 tile = tileObject.GetComponent<Tile2 >();
 
         //    if (!tile.justSwiped)
         //    {
@@ -266,7 +266,7 @@ public class Board2 : MonoBehaviour
                 if (tileObject != null)
                 {
                     allTiles[coord.x, row - 1] = tileObject;
-                    tileObject.GetComponent<Tile>().coordinatesTarget.y -= 1;
+                    tileObject.GetComponent<Tile2 >().coordinatesTarget.y -= 1;
                     dbg++;
                 }
             }
@@ -316,7 +316,7 @@ public class Board2 : MonoBehaviour
 
     private void DestroyMatchAt(Vector2Int coords)
     {
-        Tile checkTile = allTiles[coords.x, coords.y].GetComponent<Tile>();
+        Tile2 checkTile = allTiles[coords.x, coords.y].GetComponent<Tile2 >();
 
         if (checkTile.isMatched)
         {
@@ -355,7 +355,7 @@ public class Board2 : MonoBehaviour
                 }
                 else if (nullCount > 0)
                 {
-                    allTiles[x, y].GetComponent<Tile>().coordinatesTarget.y -= nullCount;
+                    allTiles[x, y].GetComponent<Tile2 >().coordinatesTarget.y -= nullCount;
                     allTiles[x, y] = null;
                 }
             }

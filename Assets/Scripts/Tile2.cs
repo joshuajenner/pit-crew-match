@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Tile2 : MonoBehaviour
 {
-    public Board board;
+    public Board2 board;
 
     public int tileIndex;
     public bool isMatched = false;
@@ -148,9 +148,9 @@ public class Tile2 : MonoBehaviour
             {
                 if (leftTile1.tag == gameObject.tag && gameObject.tag == rightTile1.tag)
                 {
-                    leftTile1.GetComponent<Tile>().SetMatched();
+                    leftTile1.GetComponent<Tile2>().SetMatched();
                     SetMatched();
-                    rightTile1.GetComponent<Tile>().SetMatched();
+                    rightTile1.GetComponent<Tile2>().SetMatched();
                 }
             }
         }
@@ -164,9 +164,9 @@ public class Tile2 : MonoBehaviour
             {
                 if (upTile1.tag == gameObject.tag && gameObject.tag == downTile1.tag)
                 {
-                    upTile1.GetComponent<Tile>().SetMatched();
+                    upTile1.GetComponent<Tile2>().SetMatched();
                     SetMatched();
-                    downTile1.GetComponent<Tile>().SetMatched();
+                    downTile1.GetComponent<Tile2>().SetMatched();
                 }
 
             }
