@@ -53,6 +53,7 @@ MonoBehaviour:
   coordinatesPrevious: {x: 0, y: 0}
   swipeAngle: 0
   swipeMinimum: 1
+  justSwiped: 0
 --- !u!212 &8354441328321123078
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -91,7 +92,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -775516717
-  m_SortingLayer: -1
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7222189c4f2770c469d381c04615f87f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

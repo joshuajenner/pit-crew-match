@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Board : MonoBehaviour
+public class Board2 : MonoBehaviour
 {
     public int boardWidth;
     public int boardHeight;
@@ -35,7 +35,8 @@ public class Board : MonoBehaviour
                 int tileIndex = Random.Range(0, tilePrefabs.Length);
 
                 int iterations = 0;
-                while (HasMatchesAt(new Vector2Int(x, y), tilePrefabs[tileIndex]) && iterations < 100) {
+                while (HasMatchesAt(new Vector2Int(x, y), tilePrefabs[tileIndex]) && iterations < 100)
+                {
                     tileIndex = Random.Range(0, tilePrefabs.Length);
                     iterations++;
                 }
@@ -128,11 +129,11 @@ public class Board : MonoBehaviour
         Vector2Int right1 = new Vector2Int(coords.x + 1, coords.y);
         Vector2Int right2 = new Vector2Int(coords.x + 2, coords.y);
 
-        if (coords.x > 0 && coords.x < (boardWidth - 1) && HasSameTags(left1, coords, right1)) 
+        if (coords.x > 0 && coords.x < (boardWidth - 1) && HasSameTags(left1, coords, right1))
         {
             matchedTiles.Add(left1);// OXO
             matchedTiles.Add(coords);
-            matchedTiles.Add(right1); 
+            matchedTiles.Add(right1);
         }
         if (coords.x > 1 && HasSameTags(left2, left1, coords))
         {
@@ -253,7 +254,7 @@ public class Board : MonoBehaviour
         //            dbg++;
         //        }
         //    }
-            
+
         //}
 
         foreach (Vector2Int coord in coords)
@@ -273,13 +274,13 @@ public class Board : MonoBehaviour
         }
 
 
-        
+
         //Debug.Log("Collapsed: " + dbg + " tiles on Column " + coord.x);
     }
 
 
 
-    private bool HasMatchesAt(Vector2Int coords, GameObject checkTile) 
+    private bool HasMatchesAt(Vector2Int coords, GameObject checkTile)
     {
         if (coords.x > 1 && coords.y > 1)
         {
@@ -295,7 +296,8 @@ public class Board : MonoBehaviour
         }
         else if (coords.x <= 1 || coords.y <= 1)
         {
-            if (coords.y > 1) { 
+            if (coords.y > 1)
+            {
                 if (allTiles[coords.x, coords.y - 1].tag == checkTile.tag && allTiles[coords.x, coords.y - 2].tag == checkTile.tag)
                 {
                     return true;
@@ -350,7 +352,7 @@ public class Board : MonoBehaviour
                 if (allTiles[x, y] == null)
                 {
                     nullCount++;
-                } 
+                }
                 else if (nullCount > 0)
                 {
                     allTiles[x, y].GetComponent<Tile>().coordinatesTarget.y -= nullCount;

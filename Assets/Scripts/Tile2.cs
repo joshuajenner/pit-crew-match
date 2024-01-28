@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+public class Tile2 : MonoBehaviour
 {
     public Board board;
 
@@ -14,7 +14,7 @@ public class Tile : MonoBehaviour
     public Vector2Int coordinatesCurrent;
     public Vector2Int coordinatesTarget;
     public Vector2Int coordinatesPrevious;
-    
+
     private Vector2 firstTouchPosition;
     private Vector2 lastTouchPosition;
     public float swipeAngle = 0;
