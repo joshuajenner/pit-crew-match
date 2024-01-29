@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Board : MonoBehaviour
-{
+{   
     public int width;
     public int height;
 
@@ -46,7 +46,68 @@ public class Board : MonoBehaviour
     }
 
 
+    public void CheckMatches()
+    {
+        int matches = 0;
+        string checkTag = "";
+        int concurrentTags = 1;
 
+        // Check Vertically / Columns
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+
+                Tile checkTile = tiles[x, y];
+                if (checkTile != null) {
+                    if (checkTile.tag == checkTag) {
+                        concurrentTags++;
+                        if (concurrentTags >= 5) {
+                            matches++;
+                            concurrentTags = 1;
+                            checkTag = "";
+                        }
+                    } else {
+                        checkTag = checkTile.tag;
+                        if (concurrentTags >= 3) {
+                            matches++;
+                            concurrentTags = 1;
+                        }
+                    }
+                } else {
+                    concurrentTags = 1;
+                    checkTag = "";
+                }
+
+            }
+        }
+
+        // Check Horizontally / Rows
+        checkTag = "";
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+
+                Tile checkTile = tiles[x, y];
+                if (checkTile != null) {
+                    if (checkTile.tag == checkTag) {
+                        concurrentTags++;
+                        if (concurrentTags >= 5) {
+                            matches++;
+                            concurrentTags = 1;
+                            checkTag = "";
+                        }
+                    } else {
+                        checkTag = checkTile.tag;
+                        if (concurrentTags >= 3) {
+                            matches++;
+                            concurrentTags = 1;
+                        }
+                    }
+                } else {
+                    concurrentTags = 1;
+                    checkTag = "";
+                }
+            }
+        }
+    }
 
 
     public void SwipeTiles(Vector2Int coords, float angle)
