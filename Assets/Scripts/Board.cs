@@ -17,7 +17,9 @@ public class Board : MonoBehaviour
     public GameObject backgroundPrefab;
     public GameObject[] tilePrefabs;
 
-    private Tile[,] tiles;
+    public Tile[,] tiles;
+
+    Tile[] swappedTiles = new Tile[2];
 
     void Start()
     {
@@ -45,12 +47,29 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void RequestMatchCheck(int row)
+    {
+        if (swappedTiles[0].isMoving || swappedTiles[1].isMoving)
+        {
+            return;
+        }
+
+        for (int x = 0; x < width; x++)
+        {
+            if (tiles[x, row] == null)
+            {
+                return;
+            }
+        }
+
+        CheckMatches();
+    }
 
     public void CheckMatches()
     {
         int matches = 0;
         string checkTag = "";
-        int concurrentTags = 1;
+        int concurrentTags = 0;
 
         // Check Vertically / Columns
         for (int x = 0; x < width; x++) {
@@ -58,27 +77,36 @@ public class Board : MonoBehaviour
 
                 Tile checkTile = tiles[x, y];
                 if (checkTile != null) {
+                    Debug.Log(checkTile.tag);
                     if (checkTile.tag == checkTag) {
                         concurrentTags++;
                         if (concurrentTags >= 5) {
+                            concurrentTags = 0;
+                            Debug.Log("Match Found");
                             matches++;
-                            concurrentTags = 1;
                             checkTag = "";
                         }
                     } else {
                         checkTag = checkTile.tag;
                         if (concurrentTags >= 3) {
+                            Debug.Log("Match Found");
                             matches++;
-                            concurrentTags = 1;
+                            concurrentTags = 0;
+                        }
+                        else
+                        {
+                            concurrentTags++;
                         }
                     }
                 } else {
-                    concurrentTags = 1;
+                    concurrentTags = 0;
                     checkTag = "";
                 }
 
             }
         }
+
+        Debug.Log($"Found {matches} Horizontal");
 
         // Check Horizontally / Rows
         checkTag = "";
@@ -96,9 +124,14 @@ public class Board : MonoBehaviour
                         }
                     } else {
                         checkTag = checkTile.tag;
-                        if (concurrentTags >= 3) {
+                        if (concurrentTags >= 3)
+                        {
                             matches++;
-                            concurrentTags = 1;
+                            concurrentTags = 0;
+                        }
+                        else
+                        {
+                            concurrentTags++;
                         }
                     }
                 } else {
@@ -107,6 +140,8 @@ public class Board : MonoBehaviour
                 }
             }
         }
+
+        Debug.Log($"{matches} Matches Found");
     }
 
 
@@ -138,12 +173,14 @@ public class Board : MonoBehaviour
         Tile startTile = tiles[coords.x, coords.y];
         Tile endTile = tiles[endCoords.x, endCoords.y];
 
-        startTile.coordTarget = endCoords;
-        endTile.coordTarget = coords;
+        swappedTiles[0] = startTile;
+        swappedTiles[1] = endTile;
 
-        tiles[coords.x, coords.y] = endTile;
-        tiles[endCoords.x, endCoords.y] = startTile;
+        startTile.MoveTo(endCoords);
+        endTile.MoveTo(coords);
 
+        tiles[coords.x, coords.y] = null;
+        tiles[endCoords.x, endCoords.y] = null;
     }
 
 

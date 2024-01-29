@@ -20,23 +20,26 @@ public class Tile : MonoBehaviour
     public bool isMoving = false;
     public const float baseMoveTime = 1f;
 
-
-    private void Update()
-    {
-
-    }
-
+    
     public void MoveTo(Vector2Int target, float moveTime)
     {
+        isMoving = true;
         coordTarget = coordCurrent;
         Vector3 targetPosition = new Vector3(target.x * board.scale, board.tileHeight, target.y * board.scale);
         Tween.LocalPosition(transform, targetPosition, moveTime, 0, null, Tween.LoopType.None, null, OnMoveToFinished);
     }
+    public void MoveTo(Vector2Int target)
+    {
+        MoveTo(target, baseMoveTime);
+    }
+
 
     private void OnMoveToFinished()
     {
+        isMoving = false;
         coordCurrent = coordTarget;
-        Debug.Log("Here");
+        board.tiles[coordCurrent.x, coordCurrent.y] = this;
+        board.RequestMatchCheck(coordCurrent.y);
     }
 
     private void HandleSwipe()
