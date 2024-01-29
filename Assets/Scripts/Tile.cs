@@ -18,8 +18,8 @@ public class Tile : MonoBehaviour
     public Vector2Int coordCurrent;
     public Vector2Int coordTarget;
     public bool isMoving = false;
-    public const float baseSpeed = 4f;
-    public float moveSpeed = 4f;
+    public const float baseSpeed = 6f;
+    public float moveSpeed = 6f;
     private float positionSnapMinimum = 0.1f;
 
 
@@ -44,27 +44,35 @@ public class Tile : MonoBehaviour
                 coordCurrent = coordTarget;
                 isMoving = false;
                 moveSpeed = baseSpeed;
-                StartCoroutine(HandleArrival());                
+                HandleArrival();                
             }
         }
     }
 
 
 
-    private IEnumerator HandleArrival()
+    private void HandleArrival()
     {
-        yield return new WaitForSeconds(0.2f);
-
         if (justSwiped)
         {
-            if (!board.TileHasMatches(coordCurrent) && !board.TileHasMatches(coordPrevious)) {
-                // No Matches, Swap Back
-                board.SwapBackTiles(coordCurrent, coordPrevious);
-            }
-        } 
-        justSwiped = false;
-        coordPrevious = coordCurrent;
-        board.DestroyMatchesAt(coordCurrent);
+            board.TileSwiped();
+
+
+            //if (!board.TileHasMatches(coordCurrent) && !board.TileHasMatches(coordPrevious) && !board.hasSwipeMatched) {
+            //    // No Matches, Swap Back
+            //    board.SwapBackTiles(coordCurrent, coordPrevious);
+            //}
+            //else
+            //{
+            //    board.hasSwipeMatched = true;
+            //}
+        }
+        else
+        {
+            coordPrevious = coordCurrent;
+            board.DestroyMatchesAt(coordCurrent);
+        }
+        
     }
 
     private void HandleSwipe()

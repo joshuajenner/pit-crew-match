@@ -19,6 +19,10 @@ public class Board : MonoBehaviour
 
     private Tile[,] tiles;
 
+    public bool hasSwipeMatched = false;
+
+    Vector2Int[] swipedCoords = new Vector2Int[2];
+    private int swipedCount = 0;
 
     void Start()
     {
@@ -48,10 +52,31 @@ public class Board : MonoBehaviour
 
 
 
+    public void TileSwiped()
+    {
+        swipedCount--;
+
+        if (swipedCount <= 0)
+        {
+            Debug.Log("Checked Swipe");
+            if (!TileHasMatches(swipedCoords[0]) && !TileHasMatches(swipedCoords[1]))
+            {
+                SwapBackTiles(swipedCoords[0], swipedCoords[1]);
+            }
+            else
+            {
+                DestroyMatchesAt(swipedCoords[0]);
+                DestroyMatchesAt(swipedCoords[1]);
+            }
+        }
+    }
+
 
 
     public void DestroyMatchesAt(Vector2Int coords)
     {
+        Debug.Log("Destroy");
+
         List<Vector2Int> matchedTiles = new List<Vector2Int>();
 
         Vector2Int up1 = new Vector2Int(coords.x, coords.y + 1);
@@ -135,7 +160,7 @@ public class Board : MonoBehaviour
         {
             Tile moveTile = tiles[coord.x, y];
             moveTile.coordTarget = new Vector2Int(coord.x, y - 1);
-            moveTile.moveSpeed = Tile.baseSpeed - (0.1f * chain);
+            moveTile.moveSpeed = Tile.baseSpeed - (0.5f * chain);
             tiles[coord.x, y - 1] = moveTile;
             chain++;
         }
@@ -152,7 +177,7 @@ public class Board : MonoBehaviour
         Tile newTile = tileObject.GetComponent<Tile>();
         tiles[x, height - 1] = newTile;
         newTile.board = this;
-        newTile.moveSpeed = Tile.baseSpeed - (0.1f * chain);
+        newTile.moveSpeed = Tile.baseSpeed - (0.5f * chain);
         newTile.coordCurrent = new Vector2Int(x, height);
         newTile.coordPrevious = newTile.coordCurrent;
         newTile.coordTarget = new Vector2Int(x, height - 1);
@@ -204,7 +229,7 @@ public class Board : MonoBehaviour
         Tile tile2 = tiles[coord2.x, coord2.y];
         Tile tile3 = tiles[coord3.x, coord3.y];
 
-        if (tile1 != null && tile2 != null && tile3 != null)
+        if (!tile1.isMoving && !tile2.isMoving && !tile3.isMoving)
         {
             if (tile1.tag == tile2.tag && tile2.tag == tile3.tag)
             {
@@ -216,6 +241,8 @@ public class Board : MonoBehaviour
 
     public void SwipeTiles(Vector2Int coords, float angle)
     {
+        swipedCount = 2;
+
         Vector2Int endCoords;
 
         if (angle > -45 && angle <= 45 && coords.x < width - 1) // Right
@@ -251,6 +278,9 @@ public class Board : MonoBehaviour
 
         tiles[coords.x, coords.y] = endTile;
         tiles[endCoords.x, endCoords.y] = startTile;
+
+        swipedCoords[0] = coords;
+        swipedCoords[1] = endCoords;
 
         Debug.Log("Swapped");
     }
