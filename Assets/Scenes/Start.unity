@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18154636, g: 0.2271893, b: 0.30740774, a: 1}
+  m_IndirectSpecularColor: {r: 0.1815466, g: 0.22718978, b: 0.3074084, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7062,9 +7062,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 16
   height: 7
-  tileScale: 3
-  displayHeight: 0.15
-  tileHeight: 0.25
+  scale: 3
+  tileHeight: 0.3
+  backgroundHeight: 0.2
   tilesParent: {fileID: 38252696}
   backgroundParent: {fileID: 1668758673}
   backgroundPrefab: {fileID: 8315331579789990916, guid: 6ff9a84998791c045bf6653c0b5746b1, type: 3}
@@ -7124,9 +7124,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 0
   height: 0
-  tileScale: 0
-  displayHeight: 0
+  scale: 0
   tileHeight: 0
+  backgroundHeight: 0
   tilesParent: {fileID: 0}
   backgroundParent: {fileID: 0}
   backgroundPrefab: {fileID: 0}
