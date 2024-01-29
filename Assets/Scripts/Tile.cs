@@ -19,6 +19,7 @@ public class Tile : MonoBehaviour
     private Vector2 lastTouchPosition;
     public float swipeAngle = 0;
     public float swipeMinimum = 1f;
+    private float moveSpeed = 2f;
 
     public bool justSwiped = false;
 
@@ -38,7 +39,7 @@ public class Tile : MonoBehaviour
             {
                 // Tile Moving Towards Target
                 board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = null;
-                transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, 2f * Time.deltaTime);
+                transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, moveSpeed * Time.deltaTime);
                 //if (board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] != this.gameObject) {
                 //    board.allTiles[coordinatesCurrent.x, coordinatesCurrent.y] = this.gameObject;
                 //}
