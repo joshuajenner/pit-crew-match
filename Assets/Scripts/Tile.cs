@@ -36,9 +36,9 @@ public class Tile : MonoBehaviour
 
     private void OnMoveToFinished()
     {
-        isMoving = false;
         coordCurrent = coordTarget;
         board.tiles[coordCurrent.x, coordCurrent.y] = this;
+        isMoving = false;
         board.RequestMatchCheck(coordCurrent.y);
     }
 
