@@ -50,10 +50,13 @@ public class Board : MonoBehaviour
 	public void RequestMatchCheck(int row)
 	{
 		// Swapped Tiles Stil Moving
-		if (swappedTiles[0].isMoving || swappedTiles[1].isMoving)
+		if (swappedTiles[0] != null && swappedTiles[1] != null)
 		{
-			return;
-		}
+            if (swappedTiles[0].isMoving || swappedTiles[1].isMoving)
+            {
+                return;
+            }
+        }
 
 		// Row Hasn't Settled
 		for (int x = 0; x < width; x++)
@@ -64,10 +67,13 @@ public class Board : MonoBehaviour
 			}
 		}
 
-		CheckMatches();
+		if (CheckMatches() == 0 && swappedTiles[0] != null)
+		{
+			SwapBackTiles();   
+		}
 	}
 
-	public void CheckMatches()
+	public int CheckMatches()
 	{
 		int matches = 0;
 		string previousTag;
@@ -156,8 +162,19 @@ public class Board : MonoBehaviour
 		}
 
 		Debug.Log($"Found {matches}");
+
+		return matches;
 	}
 
+
+	private void SwapBackTiles()
+	{
+		swappedTiles[0].MoveTo(swappedTiles[1].coordCurrent);
+        swappedTiles[1].MoveTo(swappedTiles[0].coordCurrent);
+
+        swappedTiles[0] = null;
+        swappedTiles[1] = null;
+    }
 
 	public void SwipeTiles(Vector2Int coords, float angle)
 	{
