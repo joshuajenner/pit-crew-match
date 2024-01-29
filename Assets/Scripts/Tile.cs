@@ -14,66 +14,17 @@ public class Tile : MonoBehaviour
     public float swipeAngle = 0;
     public bool justSwiped = false;
 
-    public Vector2Int coordPrevious;
     public Vector2Int coordCurrent;
     public Vector2Int coordTarget;
     public bool isMoving = false;
-    public const float baseSpeed = 6f;
-    public float moveSpeed = 6f;
-    private float positionSnapMinimum = 0.1f;
 
 
     private void Update()
     {
-        if (coordCurrent != coordTarget)
-        {
-            if (!isMoving)
-                isMoving = true;
 
-            Vector3 targetPosition = new Vector3(coordTarget.x * board.scale, board.tileHeight, coordTarget.y * board.scale);
-
-            if (Mathf.Abs((targetPosition - transform.localPosition).magnitude) > positionSnapMinimum)
-            {
-                // Tile Moving Towards Target
-                transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, moveSpeed * Time.deltaTime);
-            }
-            else
-            {
-                // Tile Arrived At Target
-                transform.localPosition = targetPosition;
-                coordCurrent = coordTarget;
-                isMoving = false;
-                moveSpeed = baseSpeed;
-                HandleArrival();                
-            }
-        }
     }
 
 
-
-    private void HandleArrival()
-    {
-        if (justSwiped)
-        {
-            board.TileSwiped();
-
-
-            //if (!board.TileHasMatches(coordCurrent) && !board.TileHasMatches(coordPrevious) && !board.hasSwipeMatched) {
-            //    // No Matches, Swap Back
-            //    board.SwapBackTiles(coordCurrent, coordPrevious);
-            //}
-            //else
-            //{
-            //    board.hasSwipeMatched = true;
-            //}
-        }
-        else
-        {
-            coordPrevious = coordCurrent;
-            board.DestroyMatchesAt(coordCurrent);
-        }
-        
-    }
 
     private void HandleSwipe()
     {
