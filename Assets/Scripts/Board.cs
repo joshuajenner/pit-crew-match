@@ -50,7 +50,113 @@ public class Board : MonoBehaviour
 
 
 
+    public void DestroyMatchesAt(Vector2Int coords)
+    {
+        List<Vector2Int> matchedTiles = new List<Vector2Int>();
 
+        Vector2Int up1 = new Vector2Int(coords.x, coords.y + 1);
+        Vector2Int up2 = new Vector2Int(coords.x, coords.y + 2);
+        Vector2Int down1 = new Vector2Int(coords.x, coords.y - 1);
+        Vector2Int down2 = new Vector2Int(coords.x, coords.y - 2);
+        Vector2Int left1 = new Vector2Int(coords.x - 1, coords.y);
+        Vector2Int left2 = new Vector2Int(coords.x - 2, coords.y);
+        Vector2Int right1 = new Vector2Int(coords.x + 1, coords.y);
+        Vector2Int right2 = new Vector2Int(coords.x + 2, coords.y);
+
+        if (coords.x > 0 && coords.x < (width - 1) && HasSameTags(left1, coords, right1))
+        {
+            matchedTiles.Add(left1);// OXO
+            matchedTiles.Add(coords);
+            matchedTiles.Add(right1);
+        }
+        if (coords.x > 1 && HasSameTags(left2, left1, coords))
+        {
+            matchedTiles.Add(left2);// OOX
+            matchedTiles.Add(left1);
+            matchedTiles.Add(coords);
+        }
+        if (coords.x < (width - 2) && HasSameTags(coords, right1, right2))
+        {
+            matchedTiles.Add(coords);// XOO
+            matchedTiles.Add(right1);
+            matchedTiles.Add(right2);
+        }
+
+        if (coords.y > 0 && coords.y < (height - 1) && HasSameTags(up1, coords, down1))
+        {
+            matchedTiles.Add(up1);//    O
+            matchedTiles.Add(coords);// X
+            matchedTiles.Add(down1);//  O
+        }
+        if (coords.y > 1 && HasSameTags(coords, down1, down2))
+        {
+            matchedTiles.Add(coords);// X
+            matchedTiles.Add(down1);//  O
+            matchedTiles.Add(down2);//  O
+        }
+        if (coords.y < (height - 2) && HasSameTags(up2, up1, coords))
+        {
+            matchedTiles.Add(up2);//    O
+            matchedTiles.Add(up1);//    O
+            matchedTiles.Add(coords);// X
+        }
+
+        if (matchedTiles.Count > 0)
+        {
+            DestoryMatchedTiles(matchedTiles);
+        }
+    }
+
+    private void DestoryMatchedTiles(List<Vector2Int> coordsList)
+    {
+        int dbg = 0;
+
+        foreach (Vector2Int coords in coordsList)
+        {
+            Tile tile = tiles[coords.x, coords.y];
+
+            if (tile != null)
+            {
+                //tiles[coords.x, coords.y] = null;
+                Destroy(tile.gameObject);
+                CollapseColumn(coords);
+                dbg++;
+            }
+        }
+
+        Debug.Log($"Destroyed {dbg} Tiles");
+
+    }
+
+    private void CollapseColumn(Vector2Int coord)
+    {
+        int chain = 0;
+        for (int y = coord.y + 1; y < height; y++)
+        {
+            Tile moveTile = tiles[coord.x, y];
+            moveTile.coordTarget = new Vector2Int(coord.x, y - 1);
+            moveTile.moveSpeed = Tile.baseSpeed - (0.1f * chain);
+            tiles[coord.x, y - 1] = moveTile;
+            chain++;
+        }
+        DropInTile(coord.x, chain);
+    }
+
+    private void DropInTile (int x, int chain)
+    {
+        int tileIndex = Random.Range(0, tilePrefabs.Length);
+        GameObject tileObject = Instantiate(tilePrefabs[tileIndex], tilesParent.transform);
+        Vector3 gridPosition = new Vector3(x * scale, tileHeight, height * scale);
+        tileObject.transform.localPosition = gridPosition;
+
+        Tile newTile = tileObject.GetComponent<Tile>();
+        tiles[x, height - 1] = newTile;
+        newTile.board = this;
+        newTile.moveSpeed = Tile.baseSpeed - (0.1f * chain);
+        newTile.coordCurrent = new Vector2Int(x, height);
+        newTile.coordPrevious = newTile.coordCurrent;
+        newTile.coordTarget = new Vector2Int(x, height - 1);
+    }
 
 
     public bool TileHasMatches(Vector2Int coord)
@@ -92,14 +198,13 @@ public class Board : MonoBehaviour
         return false;
     }
 
-
     private bool HasSameTags(Vector2Int coord1, Vector2Int coord2, Vector2Int coord3)
     {
         Tile tile1 = tiles[coord1.x, coord1.y];
         Tile tile2 = tiles[coord2.x, coord2.y];
         Tile tile3 = tiles[coord3.x, coord3.y];
 
-        if (!tile1.isMoving && !tile2.isMoving && !tile3.isMoving)
+        if (tile1 != null && tile2 != null && tile3 != null)
         {
             if (tile1.tag == tile2.tag && tile2.tag == tile3.tag)
             {
@@ -165,7 +270,6 @@ public class Board : MonoBehaviour
         tiles[start.x, start.y] = endTile;
         tiles[end.x, end.y] = startTile;
     }
-
 
     private void SpawnTile(GameObject prefab, int x, int y)
     {

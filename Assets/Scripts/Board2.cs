@@ -220,7 +220,7 @@ public class Board2 : MonoBehaviour
     {
         int tileIndex = Random.Range(0, tilePrefabs.Length);
         GameObject tileObject = Instantiate(tilePrefabs[tileIndex], tilesParent.transform);
-        Tile2 newTile = tileObject.GetComponent<Tile2 >();
+        Tile2 newTile = tileObject.GetComponent<Tile2>();
         newTile.board = this;
 
         Vector3 gridPosition = new Vector3(column * tileScale, tileHeight, boardHeight * tileScale);
