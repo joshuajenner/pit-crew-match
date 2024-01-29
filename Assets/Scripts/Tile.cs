@@ -1,3 +1,4 @@
+using Pixelplacement;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -17,6 +18,7 @@ public class Tile : MonoBehaviour
     public Vector2Int coordCurrent;
     public Vector2Int coordTarget;
     public bool isMoving = false;
+    public const float baseMoveTime = 1f;
 
 
     private void Update()
@@ -24,7 +26,18 @@ public class Tile : MonoBehaviour
 
     }
 
+    public void MoveTo(Vector2Int target, float moveTime)
+    {
+        coordTarget = coordCurrent;
+        Vector3 targetPosition = new Vector3(target.x * board.scale, board.tileHeight, target.y * board.scale);
+        Tween.LocalPosition(transform, targetPosition, moveTime, 0, null, Tween.LoopType.None, null, OnMoveToFinished);
+    }
 
+    private void OnMoveToFinished()
+    {
+        coordCurrent = coordTarget;
+        Debug.Log("Here");
+    }
 
     private void HandleSwipe()
     {
