@@ -178,6 +178,16 @@ public class Board : MonoBehaviour
 		return matchedTiles;
 	}
 
+	public void HandleMatches(List<List<Tile>> matches)
+	{
+		foreach (List<Tile> matchSet in matches)
+		{
+			foreach (Tile tile in matchSet)
+			{
+
+			}
+		}
+	}
 
 	private void SwapBackTiles()
 	{
