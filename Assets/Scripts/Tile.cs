@@ -21,6 +21,14 @@ public class Tile : MonoBehaviour
     public const float baseMoveTime = 0.35f;
 
     
+    public void SnapTo(Vector2Int target)
+    {
+        coordTarget = target;
+        coordCurrent = coordTarget;
+        transform.localPosition = new Vector3(target.x * board.scale, board.tileHeight, target.y * board.scale);
+
+    }
+
     public void MoveTo(Vector2Int target, float moveTime)
     {
         isMoving = true;
@@ -39,7 +47,16 @@ public class Tile : MonoBehaviour
         coordCurrent = coordTarget;
         board.tiles[coordCurrent.x, coordCurrent.y] = this;
         isMoving = false;
-        board.RequestMatchCheck(coordCurrent.y);
+        if (board.IsTileBelowNull(coordCurrent))
+        {
+            Debug.Log("Collapse Again");
+            board.CollapseColumns();
+        }
+        else
+        {
+            board.RequestMatchCheck(coordCurrent.y);
+        }
+
     }
 
     private void HandleSwipe()

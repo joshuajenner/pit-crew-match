@@ -57,15 +57,17 @@ public class Board : MonoBehaviour
                 return;
             }
         }
+		//Debug.Log(row);
 
-		// Row Hasn't Settled
-		for (int x = 0; x < width; x++)
-		{
-			if (tiles[x, row] == null)
-			{
-				return;
-			}
-		}
+		//Row Hasn't Settled
+		//for (int x = 0; x < width; x++)
+		//{
+		//	if (tiles[x, row] == null || tiles[x, row].isMoving)
+		//	{
+		//		Debug.Log("Row Moving Still");
+		//		return;
+		//	}
+		//}
 
 		List<List<Tile>> matchedTiles = CheckMatches();
 
@@ -78,14 +80,60 @@ public class Board : MonoBehaviour
 			return;
 		}
 		
-		foreach (List<Tile> tileSet in matchedTiles)
+		//foreach (List<Tile> tileSet in matchedTiles)
+		//{
+		//	Debug.Log($"{tileSet[0].tag} Match");
+		//}
+
+		HandleMatches(matchedTiles);
+		CollapseColumns();
+	}
+
+    public void HandleMatches(List<List<Tile>> matches)
+    {
+        // Destroy Matches
+        foreach (List<Tile> matchSet in matches)
+        {
+            foreach (Tile tile in matchSet)
+            {
+                if (tiles[tile.coordCurrent.x, tile.coordCurrent.y] != null)
+                {
+                    tiles[tile.coordCurrent.x, tile.coordCurrent.y] = null;
+                    Destroy(tile.gameObject);
+                }
+            }
+        }
+    }
+
+	public void CollapseColumns()
+	{
+		for (int x = 0; x < width; x++)
 		{
-			Debug.Log($"{tileSet[0].tag} Match");
+			int chain = 0;
+            for (int y = 0; y < height; y++)
+			{
+				if (tiles[x, y] == null)
+				{
+					for (int t = y; t < height; t++)
+					{
+						if (tiles[x, t] != null)
+						{
+							tiles[x, y] = tiles[x, t];
+                            tiles[x, t].MoveTo(new Vector2Int(x, y), Tile.baseMoveTime + 0.1f * chain);
+                            tiles[x, t] = null;
+                            break;
+						}
+					}
+                    chain++;
+                }
+			}
 		}
 	}
 
-	public List<List<Tile>> CheckMatches()
+    public List<List<Tile>> CheckMatches()
 	{
+		//Debug.Log("Checking");
+
 		List<List<Tile>> matchedTiles = new List<List<Tile>>();
 		List<Tile> concurrentTiles = new List<Tile>();
         string previousTag;
@@ -100,7 +148,7 @@ public class Board : MonoBehaviour
 			for (int y = 0; y < height; y++)
 			{
 				Tile checkTile = tiles[x, y];
-				if (checkTile != null)
+				if (checkTile != null && !checkTile.isMoving)
 				{
 					if (checkTile.tag == previousTag)
 					{
@@ -109,7 +157,7 @@ public class Board : MonoBehaviour
                         if (concurrentTiles.Count >= 5)
                         {
                             matchedTiles.Add(concurrentTiles);
-                            concurrentTiles.Clear();
+                            concurrentTiles = new List<Tile>{};
                             previousTag = "";
                         }
                     }
@@ -141,7 +189,7 @@ public class Board : MonoBehaviour
             for (int x = 0; x < width; x++)
 			{
                 Tile checkTile = tiles[x, y];
-                if (checkTile != null)
+                if (checkTile != null && !checkTile.isMoving)
                 {
                     if (checkTile.tag == previousTag)
                     {
@@ -150,7 +198,7 @@ public class Board : MonoBehaviour
                         if (concurrentTiles.Count >= 5)
                         {
                             matchedTiles.Add(concurrentTiles);
-                            concurrentTiles.Clear();
+                            concurrentTiles = new List<Tile>{};
                             previousTag = "";
                         }
                     }
@@ -173,21 +221,11 @@ public class Board : MonoBehaviour
             }
 		}
 
-		Debug.Log($"Found {matchedTiles.Count}");
+		//Debug.Log($"Found {matchedTiles.Count}");
 
 		return matchedTiles;
 	}
 
-	public void HandleMatches(List<List<Tile>> matches)
-	{
-		foreach (List<Tile> matchSet in matches)
-		{
-			foreach (Tile tile in matchSet)
-			{
-
-			}
-		}
-	}
 
 	private void SwapBackTiles()
 	{
@@ -232,11 +270,24 @@ public class Board : MonoBehaviour
 		startTile.MoveTo(endCoords);
 		endTile.MoveTo(coords);
 
-		tiles[coords.x, coords.y] = null;
-		tiles[endCoords.x, endCoords.y] = null;
+		//tiles[coords.x, coords.y] = null;
+		//tiles[endCoords.x, endCoords.y] = null;
 	}
 
-	private void SpawnTile(GameObject prefab, int x, int y)
+	public bool IsTileBelowNull(Vector2Int coord)
+	{
+		int checkX = Mathf.Clamp(coord.x, 0, width - 1);
+		int checkY = Mathf.Clamp(coord.y - 1, 0, height - 1);
+
+		if (tiles[checkX, checkY] == null)
+		{
+			return true;
+		}
+		return false;
+	}
+
+
+    private void SpawnTile(GameObject prefab, int x, int y)
 	{
 		GameObject newObject = SpawnObjectInBoard(prefab, tilesParent, x, y, tileHeight);
 		Tile newTile = newObject.GetComponent<Tile>();
