@@ -21,33 +21,52 @@ public class Board : MonoBehaviour
 
 	Tile[] swappedTiles = new Tile[2];
 
+	private bool isCheckQueued = false;
+
 	void Start()
 	{
 		tiles = new Tile[width, height];
 		InitBoard();
 	}
 
-	private void InitBoard()
-	{
-		for (int x = 0; x < width; x++)
+    private void FixedUpdate()
+    {
+		if (isCheckQueued && IsBoardSettled())
 		{
-			for (int y = 0; y < height; y++)
-			{
-				int tileIndex = Random.Range(0, tilePrefabs.Length);
-				int iterations = 0;
-				while (HasMatchesAtSpawn(new Vector2Int(x, y), tilePrefabs[tileIndex]) && iterations < 100)
-				{
-					tileIndex = Random.Range(0, tilePrefabs.Length);
-					iterations++;
-				}
-
-				SpawnTile(tilePrefabs[tileIndex], x, y);
-				SpawnObjectInBoard(backgroundPrefab, backgroundParent, x, y, backgroundHeight);
-			}
+			isCheckQueued = false;
+			HandleMatchCheck();
 		}
 	}
 
-	public void RequestMatchCheck(int row)
+
+	private void HandleMatchCheck()
+	{
+        List<List<Tile>> matchedTiles = CheckMatches();
+
+        if (matchedTiles.Count == 0)
+        {
+			Debug.Log("No Matches Found");
+
+            if (swappedTiles[0] != null && swappedTiles[1] != null)
+            {
+                SwapBackTiles();
+            }
+        }
+		else
+		{
+            DestoryMatches(matchedTiles);
+			CollapseColumns();
+			DropAllTiles();
+			QueueMatchCheck();
+        }
+    }
+
+	public void QueueMatchCheck()
+	{
+		isCheckQueued = true;
+	}
+
+    public void RequestMatchCheck2(int row)
 	{
 		// Swapped Tiles Still Moving
 		if (swappedTiles[0] != null && swappedTiles[1] != null)
@@ -85,13 +104,12 @@ public class Board : MonoBehaviour
 		//	Debug.Log($"{tileSet[0].tag} Match");
 		//}
 
-		HandleMatches(matchedTiles);
+		
 		CollapseColumns();
 	}
 
-    public void HandleMatches(List<List<Tile>> matches)
+    public void DestoryMatches(List<List<Tile>> matches)
     {
-        // Destroy Matches
         foreach (List<Tile> matchSet in matches)
         {
             foreach (Tile tile in matchSet)
@@ -105,11 +123,69 @@ public class Board : MonoBehaviour
         }
     }
 
-	public void CollapseColumns()
+    public void CollapseColumnsAndDropTiles()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            bool isFirst = true;
+
+            for (int y = 0; y < height; y++)
+            {
+                if (tiles[x, y] == null)
+                {
+                    for (int t = y; t < height; t++)
+                    {
+                        if (tiles[x, t] != null)
+                        {
+                            float moveTime = Tile.baseMoveTime;
+                            if (isFirst)
+                            {
+                                isFirst = false;
+                                moveTime = Tile.firstMoveTime;
+                            }
+                            MoveTileTo(tiles[x, t], new Vector2Int(x, y), moveTime);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+	private void DropAllTiles()
 	{
 		for (int x = 0; x < width; x++)
 		{
-			int chain = 0;
+			int count = 1;
+			for (int y = 0; y < height; y++)
+			{
+				if (tiles[x, y] == null)
+				{
+					DropTile(new Vector2Int(x, y), count);
+					count++;
+                }
+			}
+		}
+	}
+
+	private void DropTile(Vector2Int coord, int tileNum)
+	{
+        int tileIndex = Random.Range(0, tilePrefabs.Length);
+        GameObject newObject = Instantiate(tilePrefabs[tileIndex], tilesParent);
+		newObject.transform.localPosition = new Vector3(coord.x * scale, tileHeight, (height + tileNum) * scale);
+
+        Tile newTile = newObject.GetComponent<Tile>();
+        newTile.board = this;
+		newTile.MoveTo(coord);
+
+        tiles[coord.x, coord.y] = newTile;
+    }
+
+    public void CollapseColumns()
+	{
+		for (int x = 0; x < width; x++)
+		{
+			bool isFirst = true;
             for (int y = 0; y < height; y++)
 			{
 				if (tiles[x, y] == null)
@@ -118,19 +194,34 @@ public class Board : MonoBehaviour
 					{
 						if (tiles[x, t] != null)
 						{
-							tiles[x, y] = tiles[x, t];
-                            tiles[x, t].MoveTo(new Vector2Int(x, y), Tile.baseMoveTime + 0.1f * chain);
-                            tiles[x, t] = null;
+							float moveTime = Tile.baseMoveTime;
+							if (isFirst)
+							{
+								isFirst = false;
+								moveTime = Tile.firstMoveTime;
+							}
+							MoveTileTo(tiles[x, t], new Vector2Int(x, y), moveTime);
                             break;
 						}
 					}
-                    chain++;
                 }
 			}
 		}
 	}
 
-    public List<List<Tile>> CheckMatches()
+
+	private void MoveTileTo(Tile tile, Vector2Int newCoord, float inTime)
+	{
+        tiles[newCoord.x, newCoord.y] = tile;
+        tiles[tile.coordCurrent.x, tile.coordCurrent.y] = null;
+		tile.MoveTo(newCoord, inTime);
+	}
+    private void MoveTileTo(Tile tile, Vector2Int newCoord)
+    {
+		MoveTileTo(tile, newCoord, Tile.firstMoveTime);
+    }
+
+    private List<List<Tile>> CheckMatches()
 	{
 		//Debug.Log("Checking");
 
@@ -229,8 +320,14 @@ public class Board : MonoBehaviour
 
 	private void SwapBackTiles()
 	{
-		swappedTiles[0].MoveTo(swappedTiles[1].coordCurrent);
-        swappedTiles[1].MoveTo(swappedTiles[0].coordCurrent);
+		Tile tile1 = swappedTiles[0];
+		Tile tile2 = swappedTiles[1];
+
+		tiles[tile1.coordCurrent.x, tile1.coordCurrent.y] = tile2;
+		tiles[tile2.coordCurrent.x, tile2.coordCurrent.y] = tile1;
+
+        tile1.MoveTo(swappedTiles[1].coordCurrent);
+        tile2.MoveTo(swappedTiles[0].coordCurrent);
 
         swappedTiles[0] = null;
         swappedTiles[1] = null;
@@ -261,31 +358,53 @@ public class Board : MonoBehaviour
 			return;
 		}
 
+		QueueMatchCheck();
+
 		Tile startTile = tiles[coords.x, coords.y];
 		Tile endTile = tiles[endCoords.x, endCoords.y];
 
 		swappedTiles[0] = startTile;
 		swappedTiles[1] = endTile;
 
+        tiles[endCoords.x, endCoords.y] = startTile;
+        tiles[coords.x, coords.y] = endTile;
+
 		startTile.MoveTo(endCoords);
-		endTile.MoveTo(coords);
+        endTile.MoveTo(coords);
+    }
 
-		//tiles[coords.x, coords.y] = null;
-		//tiles[endCoords.x, endCoords.y] = null;
-	}
+	//public bool IsTileBelowNull(Vector2Int coord)
+	//{
+	//	int checkX = Mathf.Clamp(coord.x, 0, width - 1);
+	//	int checkY = Mathf.Clamp(coord.y - 1, 0, height - 1);
 
-	public bool IsTileBelowNull(Vector2Int coord)
-	{
-		int checkX = Mathf.Clamp(coord.x, 0, width - 1);
-		int checkY = Mathf.Clamp(coord.y - 1, 0, height - 1);
+	//	if (tiles[checkX, checkY] == null)
+	//	{
+	//		return true;
+	//	}
+	//	return false;
+	//}
 
-		if (tiles[checkX, checkY] == null)
-		{
-			return true;
-		}
-		return false;
-	}
 
+    private void InitBoard()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                int tileIndex = Random.Range(0, tilePrefabs.Length);
+                int iterations = 0;
+                while (HasMatchesAtSpawn(new Vector2Int(x, y), tilePrefabs[tileIndex]) && iterations < 100)
+                {
+                    tileIndex = Random.Range(0, tilePrefabs.Length);
+                    iterations++;
+                }
+
+                SpawnTile(tilePrefabs[tileIndex], x, y);
+                SpawnObjectInBoard(backgroundPrefab, backgroundParent, x, y, backgroundHeight);
+            }
+        }
+    }
 
     private void SpawnTile(GameObject prefab, int x, int y)
 	{
@@ -340,4 +459,19 @@ public class Board : MonoBehaviour
 		}
 		return false;
 	}
+
+    private bool IsBoardSettled()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (tiles[x, y] == null || tiles[x, y].isMoving)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

@@ -18,21 +18,22 @@ public class Tile : MonoBehaviour
     public Vector2Int coordCurrent;
     public Vector2Int coordTarget;
     public bool isMoving = false;
-    public const float baseMoveTime = 0.35f;
+    public const float baseMoveTime = 0.45f;
+    public const float firstMoveTime = 0.3f;
 
     
-    public void SnapTo(Vector2Int target)
-    {
-        coordTarget = target;
-        coordCurrent = coordTarget;
-        transform.localPosition = new Vector3(target.x * board.scale, board.tileHeight, target.y * board.scale);
+    //public void SnapTo(Vector2Int target)
+    //{
+    //    coordTarget = target;
+    //    coordCurrent = coordTarget;
+    //    transform.localPosition = new Vector3(target.x * board.scale, board.tileHeight, target.y * board.scale);
 
-    }
+    //}
 
     public void MoveTo(Vector2Int target, float moveTime)
     {
-        isMoving = true;
         coordTarget = target;
+        isMoving = true;
         Vector3 targetPosition = new Vector3(target.x * board.scale, board.tileHeight, target.y * board.scale);
         Tween.LocalPosition(transform, targetPosition, moveTime, 0, null, Tween.LoopType.None, null, OnMoveToFinished);
     }
@@ -45,18 +46,7 @@ public class Tile : MonoBehaviour
     private void OnMoveToFinished()
     {
         coordCurrent = coordTarget;
-        board.tiles[coordCurrent.x, coordCurrent.y] = this;
         isMoving = false;
-        if (board.IsTileBelowNull(coordCurrent))
-        {
-            Debug.Log("Collapse Again");
-            board.CollapseColumns();
-        }
-        else
-        {
-            board.RequestMatchCheck(coordCurrent.y);
-        }
-
     }
 
     private void HandleSwipe()
@@ -65,6 +55,11 @@ public class Tile : MonoBehaviour
         {
             swipeAngle = Mathf.Atan2(lastTouchPosition.y - firstTouchPosition.y, lastTouchPosition.x - firstTouchPosition.x) * Mathf.Rad2Deg;
             board.SwipeTiles(coordCurrent, swipeAngle);
+        }
+        else
+        {
+            string tag2 = board.tiles[coordCurrent.x, coordCurrent.y].tag;
+            Debug.Log($"{tag} Coord: ({coordCurrent.x}, {coordCurrent.y}) has {tag2}");
         }
     }
 
