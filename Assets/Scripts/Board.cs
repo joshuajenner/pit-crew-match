@@ -312,11 +312,15 @@ public class Board : MonoBehaviour
             }
 		}
 
-		//Debug.Log($"Found {matchedTiles.Count}");
+		
 
 		return matchedTiles;
 	}
 
+	public void DebugMatches()
+	{
+        Debug.Log($"Found {CheckMatches().Count} Matches");
+    }
 
 	private void SwapBackTiles()
 	{
