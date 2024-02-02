@@ -56,11 +56,6 @@ public class Tile : MonoBehaviour
             swipeAngle = Mathf.Atan2(lastTouchPosition.y - firstTouchPosition.y, lastTouchPosition.x - firstTouchPosition.x) * Mathf.Rad2Deg;
             board.SwipeTiles(coordCurrent, swipeAngle);
         }
-        else
-        {
-            string tag2 = board.tiles[coordCurrent.x, coordCurrent.y].tag;
-            Debug.Log($"{tag} Coord: ({coordCurrent.x}, {coordCurrent.y}) has {tag2}");
-        }
     }
 
     private void OnMouseDown()

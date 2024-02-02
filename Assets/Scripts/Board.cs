@@ -329,6 +329,11 @@ public class Board : MonoBehaviour
 
 	public void SwipeTiles(Vector2Int coords, float angle)
 	{
+		if (!IsBoardSettled())
+		{
+			return;
+		}
+
 		Vector2Int endCoords;
 
 		if (angle > -45 && angle <= 45 && coords.x < width - 1) // Right
@@ -367,17 +372,6 @@ public class Board : MonoBehaviour
         endTile.MoveTo(coords);
     }
 
-	//public bool IsTileBelowNull(Vector2Int coord)
-	//{
-	//	int checkX = Mathf.Clamp(coord.x, 0, width - 1);
-	//	int checkY = Mathf.Clamp(coord.y - 1, 0, height - 1);
-
-	//	if (tiles[checkX, checkY] == null)
-	//	{
-	//		return true;
-	//	}
-	//	return false;
-	//}
 
 
     private void InitBoard()
