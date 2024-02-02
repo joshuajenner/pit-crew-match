@@ -15,7 +15,6 @@ public static class SettingsManager
         SFX
     }
 
-
     public static void UpdateVolume(AudioChannel channel, float newValue)
     {
         PlayerPrefs.SetFloat(GetChannelKey(channel), newValue);
