@@ -46,13 +46,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 0}
-  tileIndex: 3
-  isMatched: 0
-  coordinatesCurrent: {x: 0, y: 0}
-  coordinatesTarget: {x: 0, y: 0}
-  coordinatesPrevious: {x: 0, y: 0}
-  swipeAngle: 0
   swipeMinimum: 1
+  swipeAngle: 0
+  justSwiped: 0
+  coordPrevious: {x: 0, y: 0}
+  coordCurrent: {x: 0, y: 0}
+  coordTarget: {x: 0, y: 0}
+  isMoving: 0
+  moveSpeed: 6
 --- !u!212 &4631605969103704167
 SpriteRenderer:
   m_ObjectHideFlags: 0
