@@ -45,8 +45,6 @@ public class Board : MonoBehaviour
 
         if (matchedTiles.Count == 0)
         {
-			Debug.Log("No Matches Found");
-
             if (swappedTiles[0] != null && swappedTiles[1] != null)
             {
                 SwapBackTiles();
@@ -233,81 +231,73 @@ public class Board : MonoBehaviour
 		// Check Vertically / Columns
 		for (int x = 0; x < width; x++)
 		{
-            concurrentTiles.Clear();
-			previousTag = "";
+			if (concurrentTiles.Count >= 3)
+			{
+                matchedTiles.Add(concurrentTiles);
+            }
+            concurrentTiles = new List<Tile> {};
+            previousTag = "";
 
 			for (int y = 0; y < height; y++)
 			{
 				Tile checkTile = tiles[x, y];
-				if (checkTile != null && !checkTile.isMoving)
+				if (checkTile.tag == previousTag)
 				{
-					if (checkTile.tag == previousTag)
-					{
-                        concurrentTiles.Add(checkTile);
+                    concurrentTiles.Add(checkTile);
 
-                        if (concurrentTiles.Count >= 5)
-                        {
-                            matchedTiles.Add(concurrentTiles);
-                            concurrentTiles = new List<Tile>{};
-                            previousTag = "";
-                        }
+                    if (concurrentTiles.Count >= 5)
+                    {
+                        matchedTiles.Add(concurrentTiles);
+                        concurrentTiles = new List<Tile>{};
+                        previousTag = "";
                     }
-					else
-					{
-						previousTag = checkTile.tag;
-                        if (concurrentTiles.Count >= 3)
-                        {
-                            matchedTiles.Add(concurrentTiles);
-                            previousTag = "";
-                        }
-                        concurrentTiles = new List<Tile>{checkTile};
-					}
-				}
+                }
 				else
 				{
-                    concurrentTiles.Clear();
-                    previousTag = "";
-                }
+					previousTag = checkTile.tag;
+                    if (concurrentTiles.Count >= 3)
+                    {
+                        matchedTiles.Add(concurrentTiles);
+                        previousTag = "";
+                    }
+                    concurrentTiles = new List<Tile>{checkTile};
+				}
 			}
 		}
 
 		// Check Horizontally / Rows
 		for (int y = 0; y < height; y++)
 		{
-            concurrentTiles.Clear();
+            if (concurrentTiles.Count >= 3)
+            {
+                matchedTiles.Add(concurrentTiles);
+            }
+            concurrentTiles = new List<Tile> { };
             previousTag = "";
 
             for (int x = 0; x < width; x++)
 			{
                 Tile checkTile = tiles[x, y];
-                if (checkTile != null && !checkTile.isMoving)
+                if (checkTile.tag == previousTag)
                 {
-                    if (checkTile.tag == previousTag)
-                    {
-                        concurrentTiles.Add(checkTile);
+                    concurrentTiles.Add(checkTile);
 
-                        if (concurrentTiles.Count >= 5)
-                        {
-                            matchedTiles.Add(concurrentTiles);
-                            concurrentTiles = new List<Tile>{};
-                            previousTag = "";
-                        }
-                    }
-                    else
+                    if (concurrentTiles.Count >= 5)
                     {
-                        previousTag = checkTile.tag;
-                        if (concurrentTiles.Count >= 3)
-                        {
-                            matchedTiles.Add(concurrentTiles);
-                            previousTag = "";
-                        }
-                        concurrentTiles = new List<Tile> {checkTile};
+                        matchedTiles.Add(concurrentTiles);
+                        concurrentTiles = new List<Tile>{};
+                        previousTag = "";
                     }
                 }
                 else
                 {
-                    concurrentTiles.Clear();
-                    previousTag = "";
+                    previousTag = checkTile.tag;
+                    if (concurrentTiles.Count >= 3)
+                    {
+                        matchedTiles.Add(concurrentTiles);
+                        previousTag = "";
+                    }
+                    concurrentTiles = new List<Tile> {checkTile};
                 }
             }
 		}
