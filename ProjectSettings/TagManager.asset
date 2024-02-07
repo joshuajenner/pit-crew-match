@@ -8,6 +8,7 @@ TagManager:
   - Red Tile
   - Green Tile
   - Yellow Tile
+  - Purple Tile
   layers:
   - Default
   - TransparentFX

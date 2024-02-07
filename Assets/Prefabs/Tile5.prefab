@@ -8,18 +8,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5603087742665071757}
+  - component: {fileID: 7241880697506377961}
   - component: {fileID: 4104164426650151632}
-  - component: {fileID: 5093378614907069300}
-  - component: {fileID: 2031684188160795777}
+  - component: {fileID: 4631605969103704167}
+  - component: {fileID: -6447833761958328209}
   m_Layer: 0
-  m_Name: Tile2
-  m_TagString: Red Tile
+  m_Name: Tile5
+  m_TagString: Purple Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5603087742665071757
+--- !u!4 &7241880697506377961
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -52,7 +52,7 @@ MonoBehaviour:
   coordCurrent: {x: 0, y: 0}
   coordTarget: {x: 0, y: 0}
   isMoving: 0
---- !u!212 &5093378614907069300
+--- !u!212 &4631605969103704167
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,7 +92,7 @@ SpriteRenderer:
   m_SortingLayerID: -775516717
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f4cf9a572378956489ae9a8b181af874, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cf47dcdf388ee4b43ba2db29975db85d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -103,7 +103,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!135 &2031684188160795777
+--- !u!135 &-6447833761958328209
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,5 +114,5 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.0000002
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
