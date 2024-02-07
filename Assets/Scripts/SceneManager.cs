@@ -12,6 +12,7 @@ public class SceneManager : MonoBehaviour
     public GameObject pauseButton;
     public GameObject pauseScreen;
     public GameObject gameBoard;
+    public GameObject settingsScreen;
 
     private float timeCount = 0.0f;
     private bool isGameBoardNeeded = false;
@@ -32,6 +33,7 @@ public class SceneManager : MonoBehaviour
     {
         SwitchToStart();
         pauseScreen.SetActive(false);
+        settingsScreen.SetActive(false);
     }
 
     void Update()
