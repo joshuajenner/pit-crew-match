@@ -8,6 +8,8 @@ public static class SettingsManager
     private const string musicVolume = "music_vol";
     private const string sfxVolumne = "sfv_vol";
 
+    private const float defaultVolume = 0.5f;
+
     public enum AudioChannel
     {
         Master,
@@ -15,15 +17,29 @@ public static class SettingsManager
         SFX
     }
 
-    public static void UpdateVolume(AudioChannel channel, float newValue)
+    public static void UpdateSetting(AudioChannel channel, float newValue)
     {
-        PlayerPrefs.SetFloat(GetChannelKey(channel), newValue);
+        PlayerPrefs.SetFloat(GetChannelKey(channel), Mathf.Clamp(newValue,0, 1));
         PlayerPrefs.Save();
     }
 
     public static float GetChannelVolume(AudioChannel channel)
     {
-        return PlayerPrefs.GetFloat(GetChannelKey(channel));
+        float volume = PlayerPrefs.GetFloat(GetChannelKey(channel));
+
+        if (channel == AudioChannel.Master)
+        {
+            return volume;
+        }
+        else
+        {
+            return volume * PlayerPrefs.GetFloat(GetChannelKey(AudioChannel.Master));
+        }
+    }
+
+    public static float GetChannelSetting(AudioChannel channel)
+    {
+        return PlayerPrefs.GetFloat(GetChannelKey(channel), defaultVolume);
     }
 
     private static string GetChannelKey(AudioChannel channel)

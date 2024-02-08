@@ -15,16 +15,16 @@ public class VolumeSlider : MonoBehaviour
     {
         slider = GetComponent<Slider>();
         GetSavedVolume();
-        slider.onValueChanged.AddListener(delegate { HandleVolumeChanged(); });
+        slider.onValueChanged.AddListener(delegate { HandleVolumeChanged();});
     }
 
     private void GetSavedVolume()
     {
-        slider.value = SettingsManager.GetChannelVolume(channel);
+        slider.value = SettingsManager.GetChannelSetting(channel);
     }
 
     private void HandleVolumeChanged()
     {
-        SettingsManager.UpdateVolume(channel, slider.value);
+        SettingsManager.UpdateSetting(channel, slider.value);
     }
 }
