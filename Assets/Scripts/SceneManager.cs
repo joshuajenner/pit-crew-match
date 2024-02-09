@@ -11,13 +11,11 @@ public class SceneManager : MonoBehaviour
     public GameObject startPanel;
     public GameObject pauseButton;
     public GameObject pauseScreen;
-    public GameObject gameBoard;
     public GameObject settingsScreen;
 
     [SerializeField] MusicManager musicManager;
 
     private float timeCount = 0.0f;
-    private bool isGameBoardNeeded = false;
 
     private Vector3 cameraCurrentPosition;
     private Quaternion cameraCurrentRotation;
@@ -54,10 +52,6 @@ public class SceneManager : MonoBehaviour
             cameraCurrentRotation = cameraTargetRotation;
             mainCamera.transform.position = cameraCurrentPosition;
             mainCamera.transform.rotation = cameraCurrentRotation;
-            if (isGameBoardNeeded)
-            {
-                gameBoard.SetActive(true);
-            }
         }
     }
     
@@ -66,8 +60,6 @@ public class SceneManager : MonoBehaviour
         musicManager.PlayMenuMusic();
         startPanel.SetActive(true);
         pauseButton.SetActive(false);
-        gameBoard.SetActive(false);
-        isGameBoardNeeded = false;
         cameraTargetPosition = cameraPointStart.transform.position;
         cameraTargetRotation = cameraPointStart.transform.rotation;
 
@@ -79,7 +71,6 @@ public class SceneManager : MonoBehaviour
         musicManager.PlayGameMusic();
         startPanel.SetActive(false);
         pauseButton.SetActive(true);
-        isGameBoardNeeded = true;
         cameraTargetPosition = cameraPointGame.transform.position;
         cameraTargetRotation = cameraPointGame.transform.rotation;
         timeCount = 0;
