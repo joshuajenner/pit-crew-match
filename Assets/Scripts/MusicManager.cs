@@ -8,13 +8,22 @@ public class MusicManager : MonoBehaviour
     public AudioClip menu;
     public AudioClip game;
 
-    private AudioSource source;
+    public AudioSource source;
 
     private void Start()
     {
-        source = GetComponent<AudioSource>();
-        source.volume = SettingsManager.GetChannelVolume(SettingsManager.AudioChannel.Music);
+        if (source == null)
+        {
+            source = GetComponent<AudioSource>();
+        }
+        SettingsManager.volumeChanged.AddListener(UpdateVolume);
+        UpdateVolume();
         PlayMenuMusic();
+    }
+
+    public void UpdateVolume()
+    {
+        source.volume = SettingsManager.GetChannelVolume(SettingsManager.AudioChannel.Music);
     }
 
     public void PlayMenuMusic()
@@ -26,5 +35,16 @@ public class MusicManager : MonoBehaviour
     public void PlayGameMusic()
     {
         source.clip = game;
+        source.Play();
+    }
+
+    public void Pause()
+    {
+        source.Pause();
+    }
+
+    public void Play()
+    {
+        source.UnPause();
     }
 }

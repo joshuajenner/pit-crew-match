@@ -3669,6 +3669,7 @@ MonoBehaviour:
   pauseScreen: {fileID: 1511230887}
   gameBoard: {fileID: 2009753258}
   settingsScreen: {fileID: 1568917546}
+  musicManager: {fileID: 1761772976}
 --- !u!1 &592565285
 GameObject:
   m_ObjectHideFlags: 0
@@ -10335,6 +10336,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menu: {fileID: 8300000, guid: 4d0e8fb8616477d409bd9bc2db0e27d7, type: 3}
   game: {fileID: 8300000, guid: ecdbe02c0b145c7499843967b29b6a66, type: 3}
+  source: {fileID: 1761772977}
 --- !u!82 &1761772977
 AudioSource:
   m_ObjectHideFlags: 0

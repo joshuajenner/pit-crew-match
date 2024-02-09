@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public static class SettingsManager
 {
@@ -9,6 +10,8 @@ public static class SettingsManager
     private const string sfxVolumne = "sfv_vol";
 
     private const float defaultVolume = 0.5f;
+
+    public static UnityEvent volumeChanged = new UnityEvent();
 
     public enum AudioChannel
     {
@@ -21,6 +24,7 @@ public static class SettingsManager
     {
         PlayerPrefs.SetFloat(GetChannelKey(channel), Mathf.Clamp(newValue,0, 1));
         PlayerPrefs.Save();
+        volumeChanged.Invoke();
     }
 
     public static float GetChannelVolume(AudioChannel channel)

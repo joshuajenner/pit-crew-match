@@ -14,6 +14,8 @@ public class SceneManager : MonoBehaviour
     public GameObject gameBoard;
     public GameObject settingsScreen;
 
+    [SerializeField] MusicManager musicManager;
+
     private float timeCount = 0.0f;
     private bool isGameBoardNeeded = false;
 
@@ -61,6 +63,7 @@ public class SceneManager : MonoBehaviour
     
     public void SwitchToStart()
     {
+        musicManager.PlayMenuMusic();
         startPanel.SetActive(true);
         pauseButton.SetActive(false);
         gameBoard.SetActive(false);
@@ -73,6 +76,7 @@ public class SceneManager : MonoBehaviour
 
     public void SwitchToGame()
     {
+        musicManager.PlayGameMusic();
         startPanel.SetActive(false);
         pauseButton.SetActive(true);
         isGameBoardNeeded = true;
@@ -84,11 +88,13 @@ public class SceneManager : MonoBehaviour
     public void PauseGame()
     {
         pauseScreen.SetActive(true);
+        musicManager.Pause();
     }
 
     public void UnPauseGame()
     {
         pauseScreen.SetActive(false);
+        musicManager.Play();
     }
 
 }
