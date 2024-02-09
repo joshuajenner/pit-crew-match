@@ -25,7 +25,7 @@ public static class SettingsManager
 
     public static float GetChannelVolume(AudioChannel channel)
     {
-        float volume = PlayerPrefs.GetFloat(GetChannelKey(channel));
+        float volume = PlayerPrefs.GetFloat(GetChannelKey(channel), defaultVolume);
 
         if (channel == AudioChannel.Master)
         {
@@ -33,7 +33,7 @@ public static class SettingsManager
         }
         else
         {
-            return volume * PlayerPrefs.GetFloat(GetChannelKey(AudioChannel.Master));
+            return volume * PlayerPrefs.GetFloat(GetChannelKey(AudioChannel.Master), defaultVolume);
         }
     }
 

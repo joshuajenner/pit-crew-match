@@ -10,7 +10,6 @@ public class MusicManager : MonoBehaviour
 
     private AudioSource source;
 
-
     private void Start()
     {
         source = GetComponent<AudioSource>();
