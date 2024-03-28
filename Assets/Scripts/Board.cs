@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Board : MonoBehaviour
 {
@@ -23,7 +24,11 @@ public class Board : MonoBehaviour
 
 	private bool isCheckQueued = false;
 
-	void Start()
+    public static UnityEvent tilesSwiped = new UnityEvent();
+    public static UnityEvent tilesSwipedBack = new UnityEvent();
+    public static UnityEvent tilesMatched = new UnityEvent();
+
+    void Start()
 	{
 		tiles = new Tile[width, height];
 		InitBoard();
@@ -64,7 +69,7 @@ public class Board : MonoBehaviour
 		isCheckQueued = true;
 	}
 
-    public void RequestMatchCheck2(int row)
+    private void RequestMatchCheck2(int row)
 	{
 		// Swapped Tiles Still Moving
 		if (swappedTiles[0] != null && swappedTiles[1] != null)
@@ -118,6 +123,7 @@ public class Board : MonoBehaviour
                     Destroy(tile.gameObject);
                 }
             }
+			tilesMatched.Invoke();
         }
     }
 
@@ -325,6 +331,8 @@ public class Board : MonoBehaviour
 
         swappedTiles[0] = null;
         swappedTiles[1] = null;
+
+		tilesSwipedBack.Invoke();
     }
 
 	public void SwipeTiles(Vector2Int coords, float angle)
@@ -370,6 +378,8 @@ public class Board : MonoBehaviour
 
 		startTile.MoveTo(endCoords);
         endTile.MoveTo(coords);
+
+		tilesSwiped.Invoke();
     }
 
 

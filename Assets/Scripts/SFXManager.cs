@@ -4,21 +4,42 @@ using UnityEngine;
 
 public class SFXManager : MonoBehaviour
 {
-    public AudioClip swipe;
-    public AudioClip swapBack;
-    public AudioClip match;
 
-    public AudioSource source;
+    public AudioSource swipe;
+    public AudioSource swapBack;
+    public AudioSource match;
 
-    // Start is called before the first frame update
+
     void Start()
     {
-        
+        SettingsManager.volumeChanged.AddListener(UpdateVolume);
+        UpdateVolume();
+
+        Board.tilesSwiped.AddListener(PlaySwipe);
+        Board.tilesSwipedBack.AddListener(PlaySwipeBack);
+        Board.tilesMatched.AddListener(PlayMatch);
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void UpdateVolume()
     {
-        
+        swipe.volume = SettingsManager.GetChannelVolume(SettingsManager.AudioChannel.SFX);
+        swapBack.volume = SettingsManager.GetChannelVolume(SettingsManager.AudioChannel.SFX);
+        match.volume = SettingsManager.GetChannelVolume(SettingsManager.AudioChannel.SFX);
+    }
+
+    private void PlaySwipe()
+    {
+        swipe.Play();
+    }
+
+    private void PlaySwipeBack()
+    {
+        swapBack.Play();
+    }
+
+    private void PlayMatch()
+    {
+        match.Play();
     }
 }
